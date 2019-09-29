@@ -1,5 +1,5 @@
 import Taro, { Component } from "@tarojs/taro";
-import { View, Text, Button } from "@tarojs/components";
+import { View, Text, Button, OpenData } from "@tarojs/components";
 import "./index.scss";
 
 export default class Index extends Component {
@@ -32,6 +32,8 @@ export default class Index extends Component {
         <Button open-type='getUserInfo' onGetUserInfo={this.getUserInfo}>
           微信授权
         </Button>
+        <OpenData className='avatar' type='userAvatarUrl'></OpenData>
+        <OpenData className='name' type='userNickName' lang='zh_CN'></OpenData>
       </View>
     );
   }
