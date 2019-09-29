@@ -1,28 +1,38 @@
-import Taro, { Component } from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
-import './index.scss'
+import Taro, { Component } from "@tarojs/taro";
+import { View, Text, Button } from "@tarojs/components";
+import "./index.scss";
 
 export default class Index extends Component {
-
   config = {
-    navigationBarTitleText: '首页'
-  }
+    navigationBarTitleText: "首页"
+  };
+  getUserInfo = userInfo => {
+    console.log("userinfo", userInfo);
+    if (userInfo.detail.userInfo) {
+      //同意
+    } else {
+      //拒绝,保持当前页面，直到同意
+    }
+  };
 
-  componentWillMount () { }
+  componentWillMount() {}
 
-  componentDidMount () { }
+  componentDidMount() {}
 
-  componentWillUnmount () { }
+  componentWillUnmount() {}
 
-  componentDidShow () { }
+  componentDidShow() {}
 
-  componentDidHide () { }
+  componentDidHide() {}
 
-  render () {
+  render() {
     return (
       <View className='index'>
-        <Text>Hello world!</Text>
+        <Text>申请获取你的公开信息（昵称、头像等）</Text>
+        <Button open-type='getUserInfo' onGetUserInfo={this.getUserInfo}>
+          微信授权
+        </Button>
       </View>
-    )
+    );
   }
 }
