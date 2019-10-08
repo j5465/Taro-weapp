@@ -1,0 +1,43 @@
+/* 改变主题变量，具体变量名可查看 taro-ui/dist/style/variables/default.scss 文件 */
+$color-brand: #1890ff;
+$color-brand-light: #69c0ff;
+$color-brand-dark: #0050b3;
+// #1890ff #52c41a #f5222d
+.at-progress {
+  .at-progress__outer {
+    .at-progress__outer-inner {
+      background-color: #f0f0f0;
+      border-radius: 100px;
+      .at-progress__outer-inner-background {
+        height: 35px;
+        border-radius: 150px;
+        transition: all 0.1s cubic-bezier(0.08, 0.82, 0.17, 1) 0s;
+        // background-color: #333;
+      }
+    }
+  }
+  .at-progress__content {
+    display: inline-block;
+    width: 2em;
+    margin-left: 8px;
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 30px;
+    line-height: 1;
+    white-space: nowrap;
+    text-align: left;
+    vertical-align: middle;
+    word-break: normal;
+  }
+}
+/* 引入 Taro UI 默认样式 */
+@import "~taro-ui/dist/style/components/button.scss";
+@import "~taro-ui/dist/style/components/avatar.scss";
+
+@import "~taro-ui/dist/style/components/toast.scss";
+@import "~taro-ui/dist/style/components/icon.scss";
+
+@import "~taro-ui/dist/style/components/progress.scss";
+@import "~taro-ui/dist/style/components/icon.scss";
+
+@import "~taro-ui/dist/style/components/flex.scss";
+@import "~taro-ui/dist/style/components/message.scss";
