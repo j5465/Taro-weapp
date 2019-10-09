@@ -4,26 +4,28 @@ import action from "../utils/action";
 export default {
   namespace: "CList",
   state: {
-    // lid
-    // name
+    list: [
+      {
+        lid: "asdfsdf",
+        name: "60-赵雪松-《美国自由的故事》-终稿.docx",
 
-    // deadLine
+        deadLine: "skdfnskdfnf",
 
-    // filePagesCount
+        // filePagesCount
 
-    // progressName
-    // progressStatus   progress,error,success
-    // progressPercent
+        progressName: "正在上传",
+        progressStatus: "progress", //   progress,error,success
+        progressPercent: 75
 
-    // printOrientation
-    // printSide
-    // printColor
-    // printCopies
-    // printPages
+        // printOrientation
+        // printSide
+        // printColor
+        // printCopies
+        // printPages
 
-    // inSetting
-
-    list: []
+        // inSetting
+      }
+    ]
   },
 
   effects: {
@@ -45,9 +47,7 @@ export default {
       for (var i = 0; i < newlist.length; i++)
         if (newlist[i].lid === payload.lid)
           newlist[i] = { ...newlist[i], ...payload.dict };
-      newlist[0].progressPercent = 0;
-      console.log(newlist);
-      return { list: newlist };
+      return { list: newlist.concat([]) };
     }
   }
 };

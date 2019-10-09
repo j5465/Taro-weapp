@@ -27,80 +27,78 @@
   }
 }
 .Card {
-  padding: 24px 24px 28px 130px;
   border: solid 4px #cfcfcf;
-  max-width: 75%;
+  max-width: 95%;
   border-radius: 20px;
   margin: auto;
   margin-bottom: 8px;
-  // height: 100px;
-  position: relative;
-  .file_type {
-    position: absolute;
-    left: 11px;
-    top: 12px;
-    width: 120px;
-    height: 163px;
-    background-size: cover;
-  }
-}
-.main_content {
-  // display: block;
-  // position: relative;
-  // height: 150px;
-  // width: 100px;
-  // background-color: rgb(165, 165, 165);
-  .name_row {
-    display: flex;
-    flex-direction: row;
-    .name {
-      color: #333;
-      white-space: nowrap;
-      text-align: left;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      width: 100%;
-      padding-right: 15px;
-      box-sizing: border-box;
-    }
-    .valid_time {
-      color: #999;
-      font-size: 25px;
-      white-space: nowrap;
-    }
-  }
-  .progress_row {
-    display: flex;
-    width: 100%;
-    margin-top: 50px;
-    max-height: 27px;
-    .status {
-      max-width: 25%;
+  .Card-1 {
+    position: relative;
+    .file_type {
+      position: absolute;
+      left: 15px;
+      top: 20px;
 
-      position: relative;
-      top: 5px;
-      height: 100%;
-      color: rgba(0, 0, 0, 0.45);
-      text-align: left;
-      font-size: 26px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: 1;
-      white-space: nowrap;
-      margin-right: 12px;
+      width: 120px;
+      height: 163px;
+      // background-size: 120px, 163px;
     }
-    .progress {
-      // display: flex;
-      width: 100%;
+    .Card-1-r {
+      // padding: 24px 24px 28px 130px;
+      padding-left: 142px;
+      padding-top: 27px;
+      padding-right: 13px;
+      padding-bottom: 15px;
+
+      .name_row {
+        .name {
+          color: #333;
+          font-size: 31px;
+          white-space: nowrap;
+          text-align: left;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 100%;
+          padding-right: 30px;
+          box-sizing: border-box;
+        }
+        .valid_time {
+          color: #999;
+          font-size: 25px;
+          white-space: nowrap;
+        }
+      }
+      .progress_row {
+        margin-top: 50px;
+        width: 100%;
+        .status {
+          position: relative;
+          height: 100%;
+          color: rgba(0, 0, 0, 0.45);
+          text-align: left;
+          font-size: 26px;
+          line-height: 1;
+          white-space: nowrap;
+          margin-right: 12px;
+        }
+        .progress {
+          padding-right: 15px;
+        }
+        .set_icon {
+          color: rgb(255, 0, 0);
+          font-family: "iconfont" !important;
+          font-size: 50px;
+          font-style: normal;
+          margin-left: 50px;
+          position: relative;
+          top: -10px;
+        }
+      }
     }
-    .set_icon {
-      color: rgb(255, 0, 0);
-      font-family: "iconfont" !important;
-      font-size: 50px;
-      font-style: normal;
-      margin-left: 50px;
-      position: relative;
-      top: -10px;
-    }
+  }
+  .Card-2 {
+    height: 60px;
+    width: 100%;
+    // background-color: #1890ff;
   }
 }

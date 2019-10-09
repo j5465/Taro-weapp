@@ -1,6 +1,6 @@
-import { AtProgress, AtMessage } from "taro-ui";
+import { AtProgress, AtMessage, AtButton } from "taro-ui";
 import Taro, { Component } from "@tarojs/taro";
-import { View, Image } from "@tarojs/components";
+import { View, Image, Text } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import {
   mapStateToProps,
@@ -37,9 +37,14 @@ export default class UploadAndCards extends Component {
     Taro.atMessage({ message: msg, type: type });
   }
   static getDerivedStateFromProps(props, state) {
+    console.log("fuck", props.list);
     return { list: props.list };
     return null;
   }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   console.log("should update?", nextProps);
+  //   return true;
+  // }
   tapUploadView() {
     new Promise((resolve, reject) => {
       wx.chooseMessageFile({
@@ -77,10 +82,8 @@ export default class UploadAndCards extends Component {
           url: "http://localhost:3000/uploadfile",
           header: {
             "content-type": "multipart/form-data",
-            cookie: {
-              lid: item.lid,
-              name: item.name
-            }
+            lid: item.lid,
+            name: item.name
           },
           filePath: item.path,
           name: "file"
@@ -90,23 +93,31 @@ export default class UploadAndCards extends Component {
         });
 
         uploadTask.progress(rs => {
-          // console.log("progress percent: ", rs.progress);
+          console.log("progress percent: ", rs.progress);
           var newList = this.state.list.map(card => {
             if (card.lid === item.lid) card["progressPercent"] = rs.progress;
             return card;
           });
+          // console.log("shit");
+          // this.changeCard(item.lid, { progressPercent: rs.progress });
           this.setState({ list: newList });
+          // console.log("shit");
         });
         uploadTask.then(Thenres => {
           console.log("uploadTask then res: ", Thenres);
-
-          if (Thenres.statusCode === 500) {
-            var data = JSON.parse(Thenres.data);
+          var data = JSON.parse(Thenres.data);
+          if (Thenres.statusCode === 200) {
+            this.changeCard(data.lid, {
+              progressName: "上传成功",
+              progressPercent: 100,
+              progressStatus: "success"
+            });
+          } else if (Thenres.statusCode === 500) {
             this.handleMessage("文件最大支持10M", "error");
+            console.log(data);
             this.changeCard(data.lid, {
               progressName: "上传失败",
-              progressStatus: "error",
-              progressPercent: 100
+              progressStatus: "error"
             });
           }
         });
@@ -118,7 +129,6 @@ export default class UploadAndCards extends Component {
   }
 
   render() {
-    // console.log("render Upload and cards: ", this.state.list);
     const CardsList = this.state.list.map((card, i) => {
       const name = card.name,
         extname = getExtname(name),
@@ -131,38 +141,52 @@ export default class UploadAndCards extends Component {
       else if (extname === "docx" || extname === "doc") filePng = doc;
       else filePng = rtf;
       if (progressStatus === "progress") progressColor = "#1890ff";
-      else if (progressStatus === "error") progressColor = "#52c41a";
-      else progressColor = "#f5222d";
+      else if (progressStatus === "error") progressColor = "#f5222d";
+      else progressColor = "#52c41a";
+      console.log(
+        "in render Upload and cards: ",
+        name,
+        extname,
+        progressStatus
+      );
       return (
         <View className='Card' key={card.lid}>
-          <Image
-            className='file_type'
-            // src={extent_Name === "docx" ? doc : extent_Name}
-            src={filePng}
-            mode='aspectFit'
-          ></Image>
-          <View className='main_content'>
-            <View className='name_row'>
-              <View className='name'>{name}</View>
-              <View className='valid_time'>{deadLine}</View>
-            </View>
-            <View className='progress_row'>
-              <View className='at-row '>
-                <View className='status'>{progressName}</View>
-                <View className='at-col at-col-7 at-col--auto'>
-                  <AtProgress
-                    className='my-progress'
-                    percent={progressPercent}
-                    status='progress'
-                    color={progressColor}
-                    // strokeWidth={12}
-                  />
+          <View className='Card-1'>
+            <Image className='file_type' src={filePng}></Image>
+            <View className='Card-1-r'>
+              <View className='at-row at-row__justify--between at-row__align--center name_row'>
+                <View className='at-col  name'>{name}</View>
+                <View className='at-col at-col-1 at-col--auto valid_time'>
+                  有效期至 3-29 17:20
                 </View>
-                <View className='at-col at-col-1 at-col--auto'>
-                  <View className='iconfont set_icon'>&#xe68d;</View>
+              </View>
+              <View className=' at-row at-row__justify--between at-row__align--center  progress_row'>
+                <View className='at-col at-col-1 at-col--auto status'>
+                  {progressName}
+                </View>
+                <View className='at-col '>
+                  <View className='  at-row at-row__justify--between at-row__align--center'>
+                    <View className='at-col   progress   '>
+                      <AtProgress
+                        // className='at-col '
+                        // percent={progressPercent}
+                        // status={progressStatus}
+                        // color={progressColor}
+                        percent={75}
+                        status='progress'
+                      ></AtProgress>
+                    </View>
+                    <View className='at-col at-col-1 at-col--auto'>
+                      <AtButton circle size='small' type='primary'>
+                        按钮
+                      </AtButton>
+                    </View>
+                  </View>
                 </View>
               </View>
             </View>
+
+            <View className='Card-2'></View>
           </View>
         </View>
       );
