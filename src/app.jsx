@@ -15,6 +15,7 @@ const dvaApp = dva.createApp({
     dispatch(action("sys/error", e));
   }
 });
+
 const store = dvaApp.getStore();
 class App extends Component {
   config = {
@@ -22,8 +23,9 @@ class App extends Component {
     window: {
       backgroundTextStyle: "light",
       navigationBarBackgroundColor: "#fff",
-      navigationBarTitleText: "WeChat",
-      navigationBarTextStyle: "black"
+      // navigationBarTitleText: "WeChat",
+      navigationBarTextStyle: "black",
+      navigationStyle: "custom"
     }
   };
 

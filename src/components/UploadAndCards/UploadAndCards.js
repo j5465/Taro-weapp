@@ -1,4 +1,4 @@
-import { AtProgress, AtMessage, AtButton } from "taro-ui";
+import { AtProgress, AtMessage, AtButton, AtTag } from "taro-ui";
 import Taro, { Component } from "@tarojs/taro";
 import { View, Image, Text } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
@@ -186,7 +186,12 @@ export default class UploadAndCards extends Component {
               </View>
             </View>
 
-            <View className='Card-2'></View>
+            <View className='Card-2'>
+              <View className='Divider div-transparent' />
+              <View className='at-row at-row__align--center'>
+                <View className='my-tag'>标签</View>
+              </View>
+            </View>
           </View>
         </View>
       );

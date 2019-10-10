@@ -29,6 +29,7 @@ $color-brand-dark: #0050b3;
     word-break: normal;
   }
 }
+
 /* 引入 Taro UI 默认样式 */
 @import "~taro-ui/dist/style/components/button.scss";
 @import "~taro-ui/dist/style/components/avatar.scss";
@@ -37,7 +38,8 @@ $color-brand-dark: #0050b3;
 @import "~taro-ui/dist/style/components/icon.scss";
 
 @import "~taro-ui/dist/style/components/progress.scss";
-@import "~taro-ui/dist/style/components/icon.scss";
 
 @import "~taro-ui/dist/style/components/flex.scss";
 @import "~taro-ui/dist/style/components/message.scss";
+
+@import "~taro-ui/dist/style/components/tag.scss";

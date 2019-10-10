@@ -2,13 +2,13 @@ import { AtToast, AtButton, AtAvatar, AtIcon, AtProgress } from "taro-ui";
 import Taro, { Component } from "@tarojs/taro";
 import { View, Text, Button, OpenData, ScrollView } from "@tarojs/components";
 import "./index.scss";
-// import Card from "../../components/Card/Card";
-// import Mupload from "../../components/upload-area/Mupload";
 import UploadAndCards from "../../components/UploadAndCards/UploadAndCards";
+import NavBar from "../../components/navbar/index";
+import HelloTop from "../../components/HelloTop/HelloTop";
 
 export default class Index extends Component {
   config = {
-    navigationBarTitleText: "首页"
+    // navigationBarTitleText: "首页"
   };
   getUserInfo = userInfo => {
     console.log("userinfo", userInfo);
@@ -19,7 +19,10 @@ export default class Index extends Component {
     }
   };
 
-  componentWillMount() {}
+  componentWillMount() {
+    // const SystemInfo = Taro.getSystemInfoSync();
+    // Taro.$navBarMarginTop = SystemInfo.screenHeight - SystemInfo.windowHeight;
+  }
 
   componentDidMount() {}
 
@@ -56,33 +59,9 @@ export default class Index extends Component {
     };
     return (
       <View className='index'>
-        <View className='container'>
-          <View className='paper'></View>
-          <View className='paper'></View>
-          <View className='paper'></View>
-          <View className='paper'></View>
-          <View className='paper'></View>
-          <View className='paper'></View>
-          <View className='paper'></View>
-          <View className='paper'></View>
-          <View className='paper'></View>
-          <View className='paper'></View>
-          <View className='paper'></View>
-          <View className='paper'></View>
-        </View>
-        <View className='keyframes'>a</View>
+        <NavBar renderLeft={<HelloTop></HelloTop>}></NavBar>
         <UploadAndCards></UploadAndCards>
-        {/* <Mupload></Mupload>
-        <view className='Cards_container'>
-          <Card></Card>
-        </view>
-      */}
-        <AtAvatar
-          className='my-avatar'
-          size='large'
-          circle
-          openData={{ type: "userAvatarUrl" }}
-        ></AtAvatar>
+
         <ScrollView
           className='scrollview'
           scrollY
