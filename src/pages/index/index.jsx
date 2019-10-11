@@ -5,6 +5,7 @@ import "./index.scss";
 import UploadAndCards from "../../components/UploadAndCards/UploadAndCards";
 import NavBar from "../../components/navbar/index";
 import HelloTop from "../../components/HelloTop/HelloTop";
+import Ripple from "../../components/Ripple/Ripple";
 
 export default class Index extends Component {
   config = {
@@ -60,6 +61,7 @@ export default class Index extends Component {
     return (
       <View className='index'>
         <NavBar renderLeft={<HelloTop></HelloTop>}></NavBar>
+        <Ripple classes='btn'>Click Me</Ripple>
         <UploadAndCards></UploadAndCards>
 
         <ScrollView

@@ -7,13 +7,26 @@ export default class UploadAndCards extends Component {
   render() {
     return (
       <View className='container'>
-        {/* <AtAvatar
+        <View
+          className='button'
+          onClick={() => {
+            console.log("s");
+          }}
+        >
+          <View className='rippleContainer'>
+            <View className='span'></View>
+          </View>
+        </View>
+      </View>
+    );
+  }
+}
+
+{
+  /* <AtAvatar
           className='my-avatar'
           size='small'
           circle
           openData={{ type: "userAvatarUrl" }}
-        ></AtAvatar> */}
-      </View>
-    );
-  }
+        ></AtAvatar> */
 }
