@@ -6,27 +6,24 @@ import "./HelloTop.scss";
 export default class UploadAndCards extends Component {
   render() {
     return (
-      <View className='container'>
-        <View
-          className='button'
-          onClick={() => {
-            console.log("s");
-          }}
-        >
-          <View className='rippleContainer'>
-            <View className='span'></View>
-          </View>
-        </View>
-      </View>
+      // <View className='container'>
+      //   <View
+      //     className='button'
+      //     onClick={() => {
+      //       console.log("s");
+      //     }}
+      //   >
+      //     <View className='rippleContainer'>
+      //       <View className='span'></View>
+      //     </View>
+      //   </View>
+      // </View>
+      <AtAvatar
+        className='my-avatar'
+        size='small'
+        circle
+        openData={{ type: "userAvatarUrl" }}
+      ></AtAvatar>
     );
   }
-}
-
-{
-  /* <AtAvatar
-          className='my-avatar'
-          size='small'
-          circle
-          openData={{ type: "userAvatarUrl" }}
-        ></AtAvatar> */
 }

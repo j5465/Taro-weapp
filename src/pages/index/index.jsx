@@ -61,7 +61,8 @@ export default class Index extends Component {
     return (
       <View className='index'>
         <NavBar renderLeft={<HelloTop></HelloTop>}></NavBar>
-        <Ripple classes='btn'>Click Me</Ripple>
+        <View></View>
+
         <UploadAndCards></UploadAndCards>
 
         <ScrollView

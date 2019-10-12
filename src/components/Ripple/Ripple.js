@@ -6,12 +6,14 @@ export default class Ripple extends Component {
   initializeState = () => {
     return {
       spanStyles: {},
-      count: 0
+      count: 0,
+      ok: false
     };
   };
   state = this.initializeState();
   cleanUp = () => {
     const initialState = this.initializeState();
+
     this.setState({ ...initialState });
   };
   /* Debounce Code to call the Ripple removing function */
@@ -26,47 +28,49 @@ export default class Ripple extends Component {
   };
 
   showRipple = e => {
-    const query = Taro.createSelectorQuery();
-    const dsb = query.select("。rippleContainer").boundingClientRect(rect => {
-      console.log(rect);
+    var rectLRTB = [];
+    const newP = new Promise((resolve, reject) => {
+      const query = Taro.createSelectorQuery().in(this.$scope);
+      query
+        .select("#targetElement")
+        .boundingClientRect(rect => {
+          console.log("rect", rect);
+          rectLRTB = [rect.left, rect.right, rect.top, rect.bottom];
+          resolve();
+        })
+        .exec();
     });
-    console.log(dsb);
+    newP.then(() => {
+      const size = Math.floor(
+        Math.max(rectLRTB[3] - rectLRTB[2], rectLRTB[1] - rectLRTB[0])
+      );
+      const x = e.touches[0].clientX - rectLRTB[0] - size / 2;
+      const y = e.touches[0].clientY - rectLRTB[2] - size / 2;
+      const spanStyles = {
+        top: y + "px",
+        left: x + "px",
+        height: size + "px",
+        width: size + "px"
+      };
+      console.log(spanStyles, e);
 
-    const rippleContainer = e.currentTarget;
-    const size = rippleContainer.offsetWidth;
-    // const pos = rippleContainer.getBoundingClientRect();
-    // const x = e.pageX - pos.x - size / 2;
-    // const y = e.pageY - pos.y - size / 2;
-    const ClientX = e.touches[0].clientX,
-      ClientY = e.touches[0].clientY,
-      pageX = e.touches[0].pageX,
-      pageY = e.touches[0].pageY;
-    const x = pageX;
-    const y = pageY;
-    const spanStyles = {
-      top: 0 + "px",
-      left: 0 + "px",
-      height: 20 + "px",
-      width: 20 + "px"
-    };
-    console.log(e);
-    const count = this.state.count + 1;
-    this.setState({
-      spanStyles: { ...this.state.spanStyles, [count]: spanStyles },
-      count: count
+      this.setState({
+        spanStyles: { ...this.state.spanStyles, [1]: spanStyles },
+        count: 1,
+        ok: false
+      });
     });
   };
 
   renderRippleSpan = () => {
-    console.log("sv");
-    const { showRipple = false, spanStyles = {} } = this.state;
+    const { spanStyles = {} } = this.state;
     const spanArray = Object.keys(spanStyles);
     if (spanArray && spanArray.length > 0) {
       console.log(spanArray);
       return spanArray.map((key, index) => {
         return (
           <View
-            className='sb'
+            className='bo'
             key={"spanCount_" + index}
             style={{ ...spanStyles[key] }}
           ></View>
@@ -77,22 +81,20 @@ export default class Ripple extends Component {
 
   render() {
     const { children = null, classes = "", onClickHandler = null } = this.props;
-    console.log(this.props);
+
     return (
       <View
-        ref='targetElement'
-        className='ripple btn'
-        id='dsb'
-        // style={{ height: "100px", width: "100px", backgroundColor: "red" }}
+        id='targetElement'
+        className='ripple'
+        // style={{ height: "100%", width: "100%" }}
         // onClick={onClickHandler}
       >
         {children}
         <View
+          id='rippleContainerID'
           className='rippleContainer'
-          onTouchStart={res => {
-            this.showRipple(res);
-          }}
-          onTouchEnd={this.callCleanUp(this.cleanUp, 1000)}
+          onTouchStart={this.showRipple}
+          onTouchEnd={this.callCleanUp(this.cleanUp, 200)}
         >
           {this.renderRippleSpan()}
         </View>

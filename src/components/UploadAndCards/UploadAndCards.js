@@ -12,6 +12,7 @@ import "./UploadAndCards.scss";
 import pdf from "../../assets/images/pdf.png";
 import doc from "../../assets/images/doc.png";
 import rtf from "../../assets/images/rtf.png";
+import { object } from "prop-types";
 
 @connect(mapStateToProps)
 export default class UploadAndCards extends Component {
@@ -199,6 +200,22 @@ export default class UploadAndCards extends Component {
 
     return (
       <View>
+        <View
+          id='abc'
+          // style={{ height: "100px", width: "100px", border: "3px #000 solid" }}
+          // style={{ border: "3px #000 solid" }}
+          onTouchStart={e => {
+            console.log(e.currentTarget);
+
+            const query = Taro.createSelectorQuery().in(this.$scope);
+            query.select("#abc").boundingClientRect();
+            query.exec(rect => {
+              console.log(rect);
+            });
+          }}
+        >
+          ABC
+        </View>
         <AtMessage />
         <View
           className='upload-top'
