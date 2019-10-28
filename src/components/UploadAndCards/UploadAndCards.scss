@@ -16,6 +16,7 @@
       font-size: 170px;
       content: "\e697";
       font-style: normal;
+      color: #69c0ff;
     }
   }
 }
@@ -23,6 +24,7 @@
   color: #1890ff;
   .icon {
     &:before {
+      color: #1890ff;
       content: "\e696";
     }
   }
@@ -51,7 +53,7 @@
       .name_row {
         .name {
           color: #333;
-          font-size: 31px;
+          font-size: 30px;
           white-space: nowrap;
           text-align: left;
           overflow: hidden;
@@ -96,7 +98,7 @@
   }
 }
 .Card-2 {
-  height: 60px;
+  // height: 60px;
 
   .Divider {
     position: relative;
@@ -116,14 +118,66 @@
       transparent 110%
     );
   }
-  .my-tag {
-    color: #000;
-    font-size: 40px;
-
-    line-height: 58px;
-    vertical-align: middle;
-
-    // background-color: #f7f7f7;
+  .mytag {
+    // display: flex;
+    background: #d1d1d1;
+    padding-left: 12px;
+    padding-right: 12px;
+    border-radius: 18px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 13px;
+    margin-bottom: 8px;
+    color: #262626;
+    font-size: 28px;
+    white-space: nowrap;
   }
-  // background-color: #1890ff;
+  .long {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .svgchoose {
+    font-size: 80px;
+    font-style: normal;
+    font-family: "printfont" !important;
+    .icon0 {
+      font-size: 100px;
+      &:before {
+        content: "\e66e";
+      }
+    }
+    .icon1 {
+      &:before {
+        content: "\e539";
+      }
+    }
+  }
+  .svgchoosed {
+    color: #40a9ff;
+    animation: tyx 400ms;
+    // font-size: 60px;
+    .icon0 {
+      &:before {
+        content: "\e66e";
+      }
+    }
+    .icon1 {
+      &:before {
+        content: "\e539";
+      }
+    }
+  }
+}
+@keyframes tyx {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
 }

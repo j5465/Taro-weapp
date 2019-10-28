@@ -2,10 +2,11 @@ import { AtToast, AtButton, AtAvatar, AtIcon, AtProgress } from "taro-ui";
 import Taro, { Component } from "@tarojs/taro";
 import { View, Text, Button, OpenData, ScrollView } from "@tarojs/components";
 import "./index.scss";
+
 import UploadAndCards from "../../components/UploadAndCards/UploadAndCards";
 import NavBar from "../../components/navbar/index";
 import HelloTop from "../../components/HelloTop/HelloTop";
-import Ripple from "../../components/Ripple/Ripple";
+import SetDrawer from "../../components/SetDrawer/SetDrawer";
 
 export default class Index extends Component {
   config = {
@@ -20,10 +21,7 @@ export default class Index extends Component {
     }
   };
 
-  componentWillMount() {
-    // const SystemInfo = Taro.getSystemInfoSync();
-    // Taro.$navBarMarginTop = SystemInfo.screenHeight - SystemInfo.windowHeight;
-  }
+  componentWillMount() {}
 
   componentDidMount() {}
 
@@ -58,14 +56,15 @@ export default class Index extends Component {
       "background-color": "rgb(241,241,241)",
       color: "#333"
     };
+
     return (
       <View className='index'>
         <NavBar renderLeft={<HelloTop></HelloTop>}></NavBar>
-        <View></View>
+        <SetDrawer>555</SetDrawer>
 
         <UploadAndCards></UploadAndCards>
 
-        <ScrollView
+        {/* <ScrollView
           className='scrollview'
           scrollY
           scrollWithAnimation
@@ -79,7 +78,7 @@ export default class Index extends Component {
           <View style={vStyleA}>A</View>
           <View style={vStyleB}>B</View>
           <View style={vStyleC}>C</View>
-        </ScrollView>
+        </ScrollView> */}
       </View>
     );
   }

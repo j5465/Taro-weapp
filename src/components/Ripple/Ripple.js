@@ -6,23 +6,20 @@ export default class Ripple extends Component {
   initializeState = () => {
     return {
       spanStyles: {},
-      count: 0,
-      ok: false
+      count: 0
     };
   };
   state = this.initializeState();
-  cleanUp = () => {
-    const initialState = this.initializeState();
-
-    this.setState({ ...initialState });
-  };
+  cleanUp = () => {};
   /* Debounce Code to call the Ripple removing function */
   callCleanUp = (cleanup, delay) => {
     console.log("sb");
     return function() {
       clearTimeout(this.bounce);
       this.bounce = setTimeout(() => {
-        cleanup();
+        const initialState = this.initializeState();
+
+        this.setState({ ...initialState });
       }, delay);
     };
   };
@@ -53,11 +50,10 @@ export default class Ripple extends Component {
         width: size + "px"
       };
       console.log(spanStyles, e);
-
+      const count = this.state.count + 1;
       this.setState({
-        spanStyles: { ...this.state.spanStyles, [1]: spanStyles },
-        count: 1,
-        ok: false
+        spanStyles: { ...this.state.spanStyles, [count]: spanStyles },
+        count: count
       });
     });
   };
@@ -80,13 +76,23 @@ export default class Ripple extends Component {
   };
 
   render() {
-    const { children = null, classes = "", onClickHandler = null } = this.props;
+    const {
+      children = null,
+      color = "#ffffff",
+      bgcolor = "#69c0ff",
+      radius = "5px",
+      onClickHandler = null
+    } = this.props;
 
     return (
       <View
         id='targetElement'
         className='ripple'
-        // style={{ height: "100%", width: "100%" }}
+        style={{
+          color: color,
+          "background-color": bgcolor,
+          "border-radius": radius
+        }}
         // onClick={onClickHandler}
       >
         {children}
@@ -94,7 +100,7 @@ export default class Ripple extends Component {
           id='rippleContainerID'
           className='rippleContainer'
           onTouchStart={this.showRipple}
-          onTouchEnd={this.callCleanUp(this.cleanUp, 200)}
+          onTouchEnd={this.callCleanUp(this.cleanUp, 7000)}
         >
           {this.renderRippleSpan()}
         </View>

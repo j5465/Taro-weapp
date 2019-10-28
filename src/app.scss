@@ -1,8 +1,16 @@
 /* 改变主题变量，具体变量名可查看 taro-ui/dist/style/variables/default.scss 文件 */
 $color-brand: #1890ff;
-$color-brand-light: #69c0ff;
+$color-brand-light: #1890ff;
 $color-brand-dark: #0050b3;
+
+/* 背景色 */
+$color-bg: #fff !default;
+$color-bg-base: #fafbfc !default;
+$color-bg-light: #ecf5fd !default;
+$color-bg-lighter: tint($color-bg-light, 50%) !default;
+$color-bg-grey: #f7f7f7 !default;
 // #1890ff #52c41a #f5222d
+
 .at-progress {
   .at-progress__outer {
     .at-progress__outer-inner {
@@ -43,3 +51,8 @@ $color-brand-dark: #0050b3;
 @import "~taro-ui/dist/style/components/message.scss";
 
 @import "~taro-ui/dist/style/components/tag.scss";
+
+@import "~taro-ui/dist/style/components/drawer.scss";
+@import "~taro-ui/dist/style/components/list.scss";
+
+@import "~taro-ui/dist/style/components/input-number.scss";

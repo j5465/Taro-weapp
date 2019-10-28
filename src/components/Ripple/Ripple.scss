@@ -13,6 +13,7 @@
   position: relative;
   display: inline-flex;
   overflow: hidden;
+  // border-radius: 10%;
 }
 .ripple .rippleContainer {
   position: absolute;
@@ -24,18 +25,18 @@
 .ripple .rippleContainer .bo {
   border-radius: 100%;
   position: absolute;
-  animation: ripple 300ms;
+  animation: ripple 600ms;
   background-color: #b3b3b3;
-  opacity: 0.5;
-  transform: scale(2);
+  opacity: 1;
+  transform: scale(0);
 }
 
 @keyframes ripple {
-  from {
-    transform: scale(0);
-  }
+  // from {
+  //   transform: scale(0);
+  // }
   to {
-    // opacity: 0;
+    opacity: 0;
     transform: scale(2);
   }
 }

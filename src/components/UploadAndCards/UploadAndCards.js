@@ -5,15 +5,18 @@ import { connect } from "@tarojs/redux";
 import {
   mapStateToProps,
   randomString,
-  getExtname
+  getExtname,
+  DeadLineToTime,
+  StatusToColor,
+  ArrayToString
 } from "../../utils/functions";
 import action from "../../utils/action";
 import "./UploadAndCards.scss";
-import pdf from "../../assets/images/pdf.png";
-import doc from "../../assets/images/doc.png";
-import rtf from "../../assets/images/rtf.png";
-import { object } from "prop-types";
+import socketio from "weapp.socket.io";
+import Ripple from "../Ripple/Ripple";
+import request from "../../utils/request";
 
+var socket = socketio("ws://127.0.0.1:3000");
 @connect(mapStateToProps)
 export default class UploadAndCards extends Component {
   constructor() {
@@ -23,9 +26,11 @@ export default class UploadAndCards extends Component {
       list: []
     };
   }
-  config: Config = {
-    navigationBarTitleText: "Upload And Cards"
-  };
+  componentDidMount() {
+    socket.on("greetings", d => {
+      console.log("received news: ", d);
+    });
+  }
   addCards = alist => {
     //{list:[ , , ]}
     this.props.dispatch(action("CList/add", { list: alist }));
@@ -34,11 +39,14 @@ export default class UploadAndCards extends Component {
     // {lid [key] [value]}
     this.props.dispatch(action("CList/change", { lid: lid, dict: adict }));
   };
+  idInSet = lid => {
+    this.props.dispatch(action("CList/idInSet", { lid: lid }));
+  };
   handleMessage(msg, type) {
     Taro.atMessage({ message: msg, type: type });
   }
   static getDerivedStateFromProps(props, state) {
-    console.log("fuck", props.list);
+    console.log("fuck", props);
     return { list: props.list };
     return null;
   }
@@ -46,12 +54,16 @@ export default class UploadAndCards extends Component {
   //   console.log("should update?", nextProps);
   //   return true;
   // }
+  setPrint(index) {
+    if (index === 0) console.log("Oritation");
+    else console.log("A34");
+  }
   tapUploadView() {
     new Promise((resolve, reject) => {
       wx.chooseMessageFile({
         count: 10,
         type: "file",
-        extension: [".doc", ".docx", ".pdf"],
+        extension: [".doc", ".docx", ".pdf", ".rtf"],
         success(res) {
           resolve(res);
         },
@@ -109,6 +121,7 @@ export default class UploadAndCards extends Component {
           var data = JSON.parse(Thenres.data);
           if (Thenres.statusCode === 200) {
             this.changeCard(data.lid, {
+              deadLine: data.deadLine,
               progressName: "上传成功",
               progressPercent: 100,
               progressStatus: "success"
@@ -132,33 +145,28 @@ export default class UploadAndCards extends Component {
   render() {
     const CardsList = this.state.list.map((card, i) => {
       const name = card.name,
-        extname = getExtname(name),
         progressName = card.progressName,
         progressStatus = card.progressStatus,
-        deadLine = card.deadLine,
-        progressPercent = card.progressPercent;
-      var progressColor, filePng;
-      if (extname === "pdf") filePng = pdf;
-      else if (extname === "docx" || extname === "doc") filePng = doc;
-      else filePng = rtf;
-      if (progressStatus === "progress") progressColor = "#1890ff";
-      else if (progressStatus === "error") progressColor = "#f5222d";
-      else progressColor = "#52c41a";
-      console.log(
-        "in render Upload and cards: ",
-        name,
-        extname,
-        progressStatus
-      );
+        progressPercent = card.progressPercent,
+        Ori = card.printOri,
+        Size = card.printSize,
+        Pages = card.printPages,
+        Copies = card.printCopies,
+        progressColor = StatusToColor(progressStatus);
+
+      console.log("cards");
       return (
         <View className='Card' key={card.lid}>
           <View className='Card-1'>
-            <Image className='file_type' src={filePng}></Image>
+            <Image
+              className='file_type'
+              src={"http://localhost:3000/img/icon/" + getExtname(name)}
+            ></Image>
             <View className='Card-1-r'>
               <View className='at-row at-row__justify--between at-row__align--center name_row'>
                 <View className='at-col  name'>{name}</View>
                 <View className='at-col at-col-1 at-col--auto valid_time'>
-                  有效期至 3-29 17:20
+                  {DeadLineToTime(card.deadLine)}
                 </View>
               </View>
               <View className=' at-row at-row__justify--between at-row__align--center  progress_row'>
@@ -170,30 +178,44 @@ export default class UploadAndCards extends Component {
                     <View className='at-col   progress   '>
                       <AtProgress
                         // className='at-col '
-                        // percent={progressPercent}
-                        // status={progressStatus}
-                        // color={progressColor}
-                        percent={75}
-                        status='progress'
+                        percent={progressPercent}
+                        status={progressStatus}
+                        color={progressColor}
                       ></AtProgress>
                     </View>
                     <View className='at-col at-col-1 at-col--auto'>
-                      <AtButton circle size='small' type='primary'>
-                        按钮
+                      <AtButton
+                        circle
+                        size='small'
+                        type='primary'
+                        onClick={() => {
+                          this.idInSet(card.lid);
+                        }}
+                      >
+                        打印设置
                       </AtButton>
                     </View>
                   </View>
                 </View>
               </View>
             </View>
+          </View>
 
+          {Ori != undefined && (
             <View className='Card-2'>
               <View className='Divider div-transparent' />
-              <View className='at-row at-row__align--center'>
-                <View className='my-tag'>标签</View>
+              <View className='at-row at-row__align--center at-row__justify--around at-row--nowrap'>
+                <View className='mytag  '>黑白</View>
+                <View className='mytag  '>单面</View>
+                <View className='mytag  '>{Size == 0 ? "A3" : "A4"}</View>
+                <View className='mytag   '>{Ori == 0 ? "纵向" : "横向"}</View>
+                <View className='mytag  long'>
+                  {"打印页码:" + ArrayToString(Pages)}
+                </View>
+                <View className='mytag '>{Copies + "份"}</View>
               </View>
             </View>
-          </View>
+          )}
         </View>
       );
     });
@@ -223,7 +245,7 @@ export default class UploadAndCards extends Component {
           onClick={this.tapUploadView.bind(this)}
         >
           <View className='icon'></View>
-          选择文件上传
+          单击选择文件打印
         </View>
         {CardsList}
       </View>

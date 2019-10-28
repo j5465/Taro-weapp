@@ -1,12 +1,14 @@
 import Taro from "@tarojs/taro";
-import { baseUrl, noConsole } from "../config";
+// import { baseUrl, noConsole } from "../config";
+const baseUrl = "http://localhost:3000/",
+  noConsole = false;
 
 const request_data = {
   platform: "wap",
   rent_mode: 2
 };
 
-export default (options = { method: "GET", data: {} }) => {
+export default function(options = { method: "GET", data: {} }) {
   if (!noConsole) {
     console.log(
       `${new Date().toLocaleString()}【 M=${options.url} 】P=${JSON.stringify(
@@ -14,16 +16,16 @@ export default (options = { method: "GET", data: {} }) => {
       )}`
     );
   }
+
   return Taro.request({
     url: baseUrl + options.url,
     data: {
-      ...request_data,
       ...options.data
     },
     header: {
       "Content-Type": "application/json"
     },
-    method: options.method.toUpperCase()
+    method: options.method
   }).then(res => {
     const { statusCode, data } = res;
     if (statusCode >= 200 && statusCode < 300) {
@@ -45,4 +47,4 @@ export default (options = { method: "GET", data: {} }) => {
       throw new Error(`网络请求错误，状态码${statusCode}`);
     }
   });
-};
+}
