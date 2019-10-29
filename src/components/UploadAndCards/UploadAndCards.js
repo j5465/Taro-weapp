@@ -26,11 +26,8 @@ export default class UploadAndCards extends Component {
       list: []
     };
   }
-  componentDidMount() {
-    socket.on("greetings", d => {
-      console.log("received news: ", d);
-    });
-  }
+
+  // static getDerivedStateFromProps(props, state) {  }
   addCards = alist => {
     //{list:[ , , ]}
     this.props.dispatch(action("CList/add", { list: alist }));
@@ -50,14 +47,15 @@ export default class UploadAndCards extends Component {
     return { list: props.list };
     return null;
   }
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   console.log("should update?", nextProps);
-  //   return true;
-  // }
-  setPrint(index) {
-    if (index === 0) console.log("Oritation");
-    else console.log("A34");
+  componentDidMount() {
+    socket.on("greetings", data => {
+      console.log("received news: ", data);
+    });
+    socket.on("change state", data => {
+      this.changeCard(data.lid, data);
+    });
   }
+
   tapUploadView() {
     new Promise((resolve, reject) => {
       wx.chooseMessageFile({
@@ -120,6 +118,11 @@ export default class UploadAndCards extends Component {
           console.log("uploadTask then res: ", Thenres);
           var data = JSON.parse(Thenres.data);
           if (Thenres.statusCode === 200) {
+            socket.emit("fileinfo", {
+              id: data.lid,
+              extname: getExtname(item.name)
+            });
+
             this.changeCard(data.lid, {
               deadLine: data.deadLine,
               progressName: "上传成功",
@@ -152,6 +155,7 @@ export default class UploadAndCards extends Component {
         Size = card.printSize,
         Pages = card.printPages,
         Copies = card.printCopies,
+        totalpages = card.totalpages,
         progressColor = StatusToColor(progressStatus);
 
       console.log("cards");
@@ -179,7 +183,11 @@ export default class UploadAndCards extends Component {
                       <AtProgress
                         // className='at-col '
                         percent={progressPercent}
-                        status={progressStatus}
+                        status={
+                          progressStatus == "warning"
+                            ? "progress"
+                            : progressStatus
+                        }
                         color={progressColor}
                       ></AtProgress>
                     </View>
@@ -201,7 +209,7 @@ export default class UploadAndCards extends Component {
             </View>
           </View>
 
-          {Ori != undefined && (
+          {Pages != undefined && (
             <View className='Card-2'>
               <View className='Divider div-transparent' />
               <View className='at-row at-row__align--center at-row__justify--around at-row--nowrap'>

@@ -14,7 +14,7 @@ export default {
         // filePagesCount
 
         progressName: "正在上传",
-        progressStatus: "progress", //   progress,error,success
+        progressStatus: "progress", //   progress,error,success warning
         progressPercent: 75,
 
         printSize: 0,

@@ -34,7 +34,9 @@ export const DeadLineToTime = ddl => {
 export const StatusToColor = progressStatus => {
   if (progressStatus === "progress") return "#1890ff";
   else if (progressStatus === "error") return "#f5222d";
+  else if (progressStatus === "warning") return "#ffc107";
   else return "#52c41a";
+  // else return "#28a745";
 };
 
 export function getSystemInfo() {
