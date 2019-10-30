@@ -8,15 +8,16 @@ import {
   getExtname,
   DeadLineToTime,
   StatusToColor,
-  ArrayToString
+  ArrayToString,
+  baseurl
 } from "../../utils/functions";
 import action from "../../utils/action";
 import "./UploadAndCards.scss";
 import socketio from "weapp.socket.io";
-import Ripple from "../Ripple/Ripple";
-import request from "../../utils/request";
+// import Ripple from "../Ripple/Ripple";
+// import request from "../../utils/request";
 
-var socket = socketio("ws://127.0.0.1:3000");
+var socket = socketio(`ws://${baseurl}/`);
 @connect(mapStateToProps)
 export default class UploadAndCards extends Component {
   constructor() {
@@ -90,7 +91,7 @@ export default class UploadAndCards extends Component {
       // console.log("list", payload.concat(this.state.list));
       res.tempFiles.forEach(item => {
         const uploadTask = Taro.uploadFile({
-          url: "http://localhost:3000/uploadfile",
+          url: `http://${baseurl}/uploadfile`,
           header: {
             "content-type": "multipart/form-data",
             lid: item.lid,
@@ -164,7 +165,7 @@ export default class UploadAndCards extends Component {
           <View className='Card-1'>
             <Image
               className='file_type'
-              src={"http://localhost:3000/img/icon/" + getExtname(name)}
+              src={`http://${baseurl}/img/icon/` + getExtname(name)}
             ></Image>
             <View className='Card-1-r'>
               <View className='at-row at-row__justify--between at-row__align--center name_row'>

@@ -25,7 +25,8 @@ class App extends Component {
       backgroundTextStyle: "light",
       // navigationBarTitleText: "WeChat",
       navigationBarTextStyle: "black",
-      navigationStyle: "custom"
+      navigationStyle: "custom",
+      enablePullDownRefresh: true
     }
   };
 

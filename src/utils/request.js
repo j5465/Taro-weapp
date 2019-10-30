@@ -1,7 +1,7 @@
 import Taro from "@tarojs/taro";
-// import { baseUrl, noConsole } from "../config";
-const baseUrl = "http://localhost:3000/",
-  noConsole = false;
+import { baseurl } from "./functions";
+
+const noConsole = false;
 
 const request_data = {
   platform: "wap",
@@ -18,7 +18,7 @@ export default function(options = { method: "GET", data: {} }) {
   }
 
   return Taro.request({
-    url: baseUrl + options.url,
+    url: baseurl + options.url,
     data: {
       ...options.data
     },

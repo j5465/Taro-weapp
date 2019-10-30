@@ -12,6 +12,10 @@ export default class Index extends Component {
   config = {
     // navigationBarTitleText: "首页"
   };
+  onPullDownRefresh() {
+    console.log("on pull down refresh");
+    Taro.stopPullDownRefresh();
+  }
   getUserInfo = userInfo => {
     console.log("userinfo", userInfo);
     if (userInfo.detail.userInfo) {
