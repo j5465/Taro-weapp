@@ -137,38 +137,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
-  .svgchoose {
-    font-size: 80px;
-    font-style: normal;
-    font-family: "printfont" !important;
-    .icon0 {
-      font-size: 100px;
-      &:before {
-        content: "\e66e";
-      }
-    }
-    .icon1 {
-      &:before {
-        content: "\e539";
-      }
-    }
-  }
-  .svgchoosed {
-    color: #40a9ff;
-    animation: tyx 400ms;
-    // font-size: 60px;
-    .icon0 {
-      &:before {
-        content: "\e66e";
-      }
-    }
-    .icon1 {
-      &:before {
-        content: "\e539";
-      }
-    }
-  }
 }
 @keyframes tyx {
   0% {

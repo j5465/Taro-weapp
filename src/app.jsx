@@ -3,7 +3,7 @@ import Taro, { Component } from "@tarojs/taro";
 import { Provider } from "@tarojs/redux";
 import Index from "./pages/index";
 import "./assets/antd-font/iconfont.css";
-import "./assets/printfonts/iconfont.css";
+import "./assets/checkfont/iconfont.css";
 import action from "./utils/action";
 import dva from "./utils/dva";
 import models from "./models";

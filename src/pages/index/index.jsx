@@ -1,6 +1,6 @@
 import { AtToast, AtButton, AtAvatar, AtIcon, AtProgress } from "taro-ui";
 import Taro, { Component } from "@tarojs/taro";
-import { View, Text, Button, OpenData, ScrollView } from "@tarojs/components";
+import { View, Text, Button, OpenData } from "@tarojs/components";
 import "./index.scss";
 
 import UploadAndCards from "../../components/UploadAndCards/UploadAndCards";
@@ -67,22 +67,6 @@ export default class Index extends Component {
         <SetDrawer>555</SetDrawer>
 
         <UploadAndCards></UploadAndCards>
-
-        {/* <ScrollView
-          className='scrollview'
-          scrollY
-          scrollWithAnimation
-          scrollTop={scrollTop}
-          style={scrollStyle}
-          lowerThreshold={Threshold}
-          upperThreshold={Threshold}
-          onScrollToUpper={this.onScrollToUpper.bind(this)} // 使用箭头函数的时候 可以这样写 `onScrollToUpper={this.onScrollToUpper}`
-          onScroll={this.onScroll}
-        >
-          <View style={vStyleA}>A</View>
-          <View style={vStyleB}>B</View>
-          <View style={vStyleC}>C</View>
-        </ScrollView> */}
       </View>
     );
   }

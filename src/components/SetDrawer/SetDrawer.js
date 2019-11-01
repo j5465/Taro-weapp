@@ -1,11 +1,12 @@
-import { AtButton, AtDrawer, AtRadio, AtInputNumber } from "taro-ui";
+import { AtButton, AtDrawer, AtIcon, AtInputNumber } from "taro-ui";
 import Taro, { Component } from "@tarojs/taro";
-import { View } from "@tarojs/components";
+import { View, Image, ScrollView } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import {
   mapStateToProps,
   ArrayToString,
-  getSystemInfo
+  getSystemInfo,
+  baseurl
 } from "../../utils/functions";
 import action from "../../utils/action";
 import MRadio from "../MRadio/MRadio";
@@ -43,19 +44,7 @@ export default class SetDrawer extends Component {
   }
   render() {
     const { navBarHeight, navBarExtendHeight } = getSystemInfo();
-    // var {
-    //   printSize,
-    //   printOri,
-    //   printPages,
-    //   printCopies,
-    //   lid,
-    //   name
-    // } = this.state.card;
-    // console.log(printSize, printOri, printCopies, printPages, lid, name);
-    //16 16
-    //15 17
-    //14 18
-    //13 20
+
     var pagesString, choosefontsize;
     if (this.state.card != undefined) {
       pagesString = "打印页码:" + ArrayToString(this.state.card.printPages);
@@ -133,11 +122,32 @@ export default class SetDrawer extends Component {
               ]}
               value={0}
               choosefontsize={choosefontsize}
+              loading
               // onClick={this.handleChange.bind(this)}
             ></MRadio>
           </View>
         )}
+
         <AtInputNumber min={0} max={10} step={1} value={5} size={3} />
+
+        {/* <AtIcon prefixClass='checkicon' value="" ></AtIcon> */}
+        <View className='page_img'>
+          <View className='checkicon' hoverClass='checkicon_onhover'></View>
+
+          <Image
+            src={`http://${baseurl}/img/page/Zl3S9jSA7s_01/3`}
+            style='width: 100%'
+            mode='widthFix'
+            lazyLoad
+          ></Image>
+
+          <View
+            className='light_blue_border'
+            onClick={() => {
+              console.log("sb!!!");
+            }}
+          ></View>
+        </View>
       </AtDrawer>
     );
   }

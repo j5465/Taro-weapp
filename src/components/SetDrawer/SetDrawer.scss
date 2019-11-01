@@ -4,3 +4,58 @@
 @import "~taro-ui/dist/style/components/icon.scss";
 @import "~taro-ui/dist/style/components/flex.scss";
 @import "~taro-ui/dist/style/components/input-number.scss";
+
+.page_img {
+  width: 100%;
+
+  position: relative;
+  border-top: solid 2px;
+  .checkicon {
+    z-index: 2;
+    display: inline-block;
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    &::before {
+      display: inline-block;
+      font-family: "checkfont" !important;
+      font-size: 60px;
+      content: "\e607";
+      font-style: normal;
+      opacity: 0.6;
+      // color: #69c0ff;
+    }
+  }
+  .checkicon_onhover {
+    &::before {
+      color: #1a73e8;
+    }
+  }
+  .checkicon_checked {
+    z-index: 2;
+    &::before {
+      font-family: "iconfont" !important;
+      content: "\e62f";
+      color: #1a73e8;
+      opacity: 1;
+    }
+  }
+}
+.page_img .light_blue_border {
+  position: absolute;
+  z-index: 1;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  border: solid 28px #d6e4ef;
+  animation: generate_border 3000ms;
+}
+@keyframes generate_border {
+  from {
+    border: solid 0px #d6e4ef;
+  }
+  to {
+    border: solid 28px #d6e4ef;
+  }
+}

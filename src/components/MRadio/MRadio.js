@@ -17,7 +17,8 @@ export default class MRadio extends AtComponent {
       className,
       options,
       value,
-      choosefontsize
+      choosefontsize,
+      loading
     } = this.props;
 
     return (
@@ -48,7 +49,9 @@ export default class MRadio extends AtComponent {
                   {choosefontsize === undefined ? (
                     <Text className='at-icon at-icon-check'></Text>
                   ) : (
-                    <View className='right_arrow'></View>
+                    <View
+                      className={loading == true ? "load_rotate" : "down_arrow"}
+                    ></View>
                   )}
                 </View>
               </View>
