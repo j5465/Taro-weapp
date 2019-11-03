@@ -29,7 +29,7 @@ export default class MRadio extends AtComponent {
             onClick={this.handleClick.bind(this, option)}
             className={classNames({
               "M-radio__option": true,
-              "M-radio__option--disabled": option.disabled
+              "M-radio__option--disabled": option.disabled || loading
             })}
           >
             <View className='M-radio__option-wrap'>

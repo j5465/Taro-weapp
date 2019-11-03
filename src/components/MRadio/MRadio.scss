@@ -22,11 +22,11 @@
     vertical-align: middle;
     color: #1890ff;
   }
-  animation: rotate1 1s infinite;
+  animation: rotate1 1s infinite linear;
 }
 @keyframes rotate1 {
   100% {
-    transform: rotate(330deg);
+    transform: rotate(360deg);
   }
 }
 
@@ -92,7 +92,7 @@
     &--disabled {
       .M-radio__option-container,
       .M-radio__desc {
-        opacity: 0.3;
+        opacity: 0.4;
       }
 
       &:active {
