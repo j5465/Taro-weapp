@@ -10,7 +10,7 @@ import SetDrawer from "../../components/SetDrawer/SetDrawer";
 
 export default class Index extends Component {
   config = {
-    // navigationBarTitleText: "首页"
+    navigationBarTitleText: "首页"
   };
   onPullDownRefresh() {
     console.log("on pull down refresh");
@@ -63,7 +63,20 @@ export default class Index extends Component {
 
     return (
       <View className='index'>
-        <NavBar renderLeft={<HelloTop></HelloTop>}></NavBar>
+        <NavBar
+          renderLeft={
+            <View style='padding-left:10px '>
+              <AtAvatar
+                className='my-avatar'
+                size='small'
+                circle
+                openData={{ type: "userAvatarUrl" }}
+              ></AtAvatar>
+            </View>
+          }
+          renderCenter={<View style='font-size:44rpx'>打印工具</View>}
+          // renderRight={          }
+        ></NavBar>
         <SetDrawer>555</SetDrawer>
 
         <UploadAndCards></UploadAndCards>

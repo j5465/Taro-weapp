@@ -10,7 +10,11 @@ $color-bg-light: #ecf5fd !default;
 $color-bg-lighter: tint($color-bg-light, 50%) !default;
 $color-bg-grey: #f7f7f7 !default;
 // #1890ff #52c41a #f5222d
-
+// .at-avatar .at-avatar--small .at-avatar--circle .my-avatar {
+.at-avatar--small {
+  width: 70px;
+  height: 70px;
+}
 .at-progress {
   .at-progress__outer {
     .at-progress__outer-inner {

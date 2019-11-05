@@ -4,42 +4,7 @@ import action from "../utils/action";
 export default {
   namespace: "CList",
   state: {
-    list: [
-      {
-        "11_7": true,
-        deadLine: 1573348291971,
-        lid: "hH9vrylAg9",
-        name: "sbsmall.docx",
-        printCopies: 1,
-        printOri: 1,
-        printPages: [2, 3, 4, 5, 6, 7],
-        printSize: 1,
-        progressName: "读取成功",
-        progressPercent: 100,
-        progressStatus: "success",
-        totalpages: 7
-      },
-      {
-        lid: "asdfsdf",
-        name: "60-赵雪松-《美国自由的故事》-终稿.docx",
-
-        deadLine: 1572009556533,
-
-        // filePagesCount
-
-        progressName: "正在上传",
-        progressStatus: "progress", //   progress,error,success warning
-        progressPercent: 75,
-
-        printSize: 0,
-        printOri: 0,
-        printPages: [1, 2, 5, 3, 4, 9, 10, 15, 16, 17],
-
-        printCopies: 3,
-        totalpages: 40,
-        inSetting: true
-      }
-    ],
+    list: [],
     setlid: ""
   },
 

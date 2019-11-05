@@ -42,57 +42,82 @@ export default class SetDrawer extends Component {
   handleChangeOri(value) {
     this.changeCard(this.state.card.lid, { printOri: value });
   }
+  handleChangetoggle(pagenum, hav) {
+    if (hav)
+      this.changeCard(this.state.card.lid, {
+        printPages: this.state.card.printPages.filter((value, index, arr) => {
+          return value != pagenum;
+        })
+      });
+    else
+      this.changeCard(this.state.card.lid, {
+        printPages: this.state.card.printPages.concat(pagenum)
+      });
+  }
+  handleChangeCopies(value) {
+    this.changeCard(this.state.card.lid, { printCopies: value });
+  }
   render() {
     const { navBarHeight, navBarExtendHeight } = getSystemInfo(),
       card = this.state.card;
 
-    var pagesString, choosefontsize;
-    if (card != undefined) {
+    var pagesString, choosefontsize, set, done, id_set;
+    if (card != undefined && "printPages" in card == true) {
       console.log(card);
-      const set_count =
-          card.printSize + "" + card.printOri + "_" + card.totalpages,
-        done = card[set_count] == undefined ? false : true,
-        id_set = card.lid + "_" + card.printSize + "" + card.printOri;
+      (set = card.printSize + "" + card.printOri),
+        (done = card[set] == undefined ? false : true),
+        (id_set = card.lid + "_" + card.printSize + "" + card.printOri);
 
       var FullprintPages = [];
-      for (let i = 1; i <= card.totalpages; i++) FullprintPages.push(i);
-      console.log(set_count, done);
+      for (let i = 1; i <= card[set + "_"]; i++) FullprintPages.push(i);
+      console.log(set, done);
       if (done)
         var imglist = FullprintPages.map((index, i) => {
           const hav = card.printPages.indexOf(index) == -1 ? false : true;
           console.log(index, hav);
           return (
-            <View className="page_img" key={id_set + index}>
+            <View className='page_img' key={id_set + index}>
               <Image
                 src={`http://${baseurl}/img/page/${id_set}/${index}`}
-                style="width: 100%"
-                mode="widthFix"
+                style='width: 100%'
+                mode='widthFix'
                 lazyLoad
               ></Image>
               {hav ? (
                 <View
-                  className="light_blue_border"
+                  className='blue_border'
                   onClick={() => {
                     console.log("sb!!!");
                   }}
                 ></View>
-              ) : null}
+              ) : (
+                <View className='cancel_blue_border'></View>
+              )}
 
               {hav ? (
-                <View className="checkicon_checked"></View>
+                <View
+                  className='checkicon_checked'
+                  hoverClass='checkicon_checked_onhover'
+                  onClick={() => {
+                    this.handleChangetoggle(index, hav);
+                  }}
+                ></View>
               ) : (
                 <View
-                  className="uncheckicon"
-                  // hoverClass='uncheckicon_onhover'
-                  hoverClass="checkicon_checked"
+                  className='uncheckicon'
+                  hoverClass='uncheckicon_onhover'
+                  // hoverClass="checkicon_checked"
+                  onClick={() => {
+                    this.handleChangetoggle(index, hav);
+                  }}
                 ></View>
               )}
             </View>
           );
         });
-      else imglist = null;
-      console.log(typeof imglist);
-      pagesString = "打印页码:" + ArrayToString(card.printPages);
+      else var imglist;
+      console.log("imglist:", typeof imglist);
+      pagesString = "打印页码: " + ArrayToString(card.printPages);
       if (pagesString.length <= 16) choosefontsize = "16px";
       else if (pagesString.length == 17) choosefontsize = "15px";
       else if (pagesString.length == 18) choosefontsize = "14px";
@@ -103,7 +128,7 @@ export default class SetDrawer extends Component {
     return (
       <AtDrawer show={this.state.show} mask onClose={this.onClose.bind(this)}>
         <View
-          className="fill_statusBarHeight"
+          className='fill_statusBarHeight'
           style={`height:${navBarHeight + navBarExtendHeight}px;`}
         ></View>
 
@@ -114,7 +139,7 @@ export default class SetDrawer extends Component {
                 { label: "黑白", value: "0" },
                 { label: "彩色", value: "1", disabled: true }
               ]}
-              value="0"
+              value='0'
             />
             <MRadio
               options={[
@@ -128,7 +153,7 @@ export default class SetDrawer extends Component {
                   disabled: true
                 }
               ]}
-              value="0"
+              value='0'
             />
             <MRadio
               options={[
@@ -167,14 +192,30 @@ export default class SetDrawer extends Component {
               ]}
               value={0}
               choosefontsize={choosefontsize}
-              loading
+              loading={done != true}
               // onClick={this.handleChange.bind(this)}
             ></MRadio>
           </View>
         )}
-
-        <AtInputNumber min={0} max={10} step={1} value={5} size={3} />
-        {imglist}
+        <View
+          className='at-row at-row__align--center at-row__align-content--between'
+          style='padding:10px 7px 10px 16px'
+        >
+          <View className='at-col' style='color:#333'>
+            份数:
+          </View>
+          <View className='at-col'>
+            <AtInputNumber
+              min={1}
+              max={100}
+              step={1}
+              value={card == undefined ? 0 : this.state.card.printCopies}
+              onChange={this.handleChangeCopies.bind(this)}
+              size='23'
+            />
+          </View>
+        </View>
+        {done == true && imglist}
       </AtDrawer>
     );
   }

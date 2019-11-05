@@ -22,9 +22,11 @@ class App extends Component {
   config = {
     pages: ["pages/index/index"],
     window: {
-      backgroundTextStyle: "light",
+      // backgroundTextStyle: "light",
       // navigationBarTitleText: "WeChat",
       navigationBarTextStyle: "black",
+      // navigationStyle: "default",
+      // navigationBarBackgroundColor: "#ffffff",
       navigationStyle: "custom",
       enablePullDownRefresh: true
     }

@@ -44,7 +44,32 @@ export default class UploadAndCards extends Component {
     Taro.atMessage({ message: msg, type: type });
   }
   static getDerivedStateFromProps(props, state) {
-    console.log("fuck", props);
+    var ylist = state.list,
+      nlist = props.list;
+    // for (let i = 0; i < nlist.length; i++) {
+    //   let nlid = nlist[i].lid;
+    //   for (let j = 0; j < ylist.length; i++) {
+    //     if (ylist[j] == nlid) {
+    //       if (
+    //         nlist[i].printSize != ylist[j].printSize ||
+    //         nlist[i].printOri != ylist[j].printOri
+    //       )
+
+    //     }
+    //   }
+    // }
+    for (let i = 0; i < nlist.length; i++) {
+      if (
+        nlist[i].printSize != undefined &&
+        nlist[i].printSize + "" + nlist[i].printOri in nlist[i] == false
+      )
+        socket.emit("genimg", {
+          id: nlist[i].lid,
+          set: nlist[i].printSize + "" + nlist[i].printOri,
+          extname: getExtname(nlist[i].name)
+        });
+    }
+    console.log("fuck upload and cards derived state from props");
     return { list: props.list };
     return null;
   }
@@ -156,7 +181,7 @@ export default class UploadAndCards extends Component {
         Size = card.printSize,
         Pages = card.printPages,
         Copies = card.printCopies,
-        totalpages = card.totalpages,
+        totalpages = card[Size + "" + Ori + "_"],
         progressColor = StatusToColor(progressStatus);
 
       console.log("cards");
@@ -231,10 +256,8 @@ export default class UploadAndCards extends Component {
 
     return (
       <View>
-        <View
+        {/* <View
           id='abc'
-          // style={{ height: "100px", width: "100px", border: "3px #000 solid" }}
-          // style={{ border: "3px #000 solid" }}
           onTouchStart={e => {
             console.log(e.currentTarget);
 
@@ -246,7 +269,7 @@ export default class UploadAndCards extends Component {
           }}
         >
           ABC
-        </View>
+        </View> */}
         <AtMessage />
         <View
           className='upload-top'
