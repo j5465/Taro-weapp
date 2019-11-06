@@ -88,11 +88,6 @@ export default class Ripple extends Component {
       <View
         id='targetElement'
         className='ripple'
-        style={{
-          color: color,
-          "background-color": bgcolor,
-          "border-radius": radius
-        }}
         // onClick={onClickHandler}
       >
         {children}

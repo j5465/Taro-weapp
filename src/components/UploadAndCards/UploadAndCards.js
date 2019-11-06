@@ -14,10 +14,10 @@ import {
 import action from "../../utils/action";
 import "./UploadAndCards.scss";
 import socketio from "weapp.socket.io";
-// import Ripple from "../Ripple/Ripple";
+import Ripple from "../Ripple/Ripple";
 // import request from "../../utils/request";
 
-var socket = socketio(`ws://${baseurl}/`);
+var socket = socketio(`wss://${baseurl}/`);
 @connect(mapStateToProps)
 export default class UploadAndCards extends Component {
   constructor() {
@@ -116,7 +116,7 @@ export default class UploadAndCards extends Component {
       // console.log("list", payload.concat(this.state.list));
       res.tempFiles.forEach(item => {
         const uploadTask = Taro.uploadFile({
-          url: `http://${baseurl}/uploadfile`,
+          url: `https://${baseurl}/uploadfile`,
           header: {
             "content-type": "multipart/form-data",
             lid: item.lid,
@@ -190,7 +190,7 @@ export default class UploadAndCards extends Component {
           <View className='Card-1'>
             <Image
               className='file_type'
-              src={`http://${baseurl}/img/icon/` + getExtname(name)}
+              src={`https://${baseurl}/img/icon/` + getExtname(name)}
             ></Image>
             <View className='Card-1-r'>
               <View className='at-row at-row__justify--between at-row__align--center name_row'>
@@ -271,15 +271,25 @@ export default class UploadAndCards extends Component {
           ABC
         </View> */}
         <AtMessage />
-        <View
-          className='upload-top'
-          hoverClass='upload-top-blue'
-          onClick={this.tapUploadView.bind(this)}
-        >
-          <View className='icon'></View>
-          单击选择文件打印
-        </View>
+        <Ripple>
+          <View
+            className='upload-top'
+            hoverClass='upload-top-blue'
+            onClick={this.tapUploadView.bind(this)}
+            style='z-index:2'
+          >
+            <View className='icon'></View>
+            单击选择文件打印
+          </View>
+        </Ripple>
         {CardsList}
+        <View
+          style='width:100px;height:100px;background-color:#8c8c8c;z-index:10'
+          onClick={() => {
+            console.log("open");
+            this.props.dispatch(action("modal_store/save", { isOpen: true }));
+          }}
+        ></View>
       </View>
     );
   }

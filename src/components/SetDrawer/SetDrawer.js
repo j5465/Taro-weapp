@@ -78,10 +78,9 @@ export default class SetDrawer extends Component {
           return (
             <View className='page_img' key={id_set + index}>
               <Image
-                src={`http://${baseurl}/img/page/${id_set}/${index}`}
+                src={`https://${baseurl}/img/page/${id_set}/${index}`}
                 style='width: 100%'
                 mode='widthFix'
-                lazyLoad
               ></Image>
               {hav ? (
                 <View

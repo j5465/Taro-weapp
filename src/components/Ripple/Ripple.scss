@@ -11,11 +11,13 @@
 /* ripple */
 .ripple {
   position: relative;
-  display: inline-flex;
+  display: inline-block;
+  width: 100%;
   overflow: hidden;
   // border-radius: 10%;
 }
 .ripple .rippleContainer {
+  // display: inline-block;
   position: absolute;
   top: 0;
   right: 0;

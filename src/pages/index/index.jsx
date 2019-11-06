@@ -5,8 +5,9 @@ import "./index.scss";
 
 import UploadAndCards from "../../components/UploadAndCards/UploadAndCards";
 import NavBar from "../../components/navbar/index";
-import HelloTop from "../../components/HelloTop/HelloTop";
+import Modal from "../../components/Modal/Modal";
 import SetDrawer from "../../components/SetDrawer/SetDrawer";
+import action from "../../utils/action";
 
 export default class Index extends Component {
   config = {
@@ -77,6 +78,7 @@ export default class Index extends Component {
           renderCenter={<View style='font-size:44rpx'>打印工具</View>}
           // renderRight={          }
         ></NavBar>
+        <Modal></Modal>
         <SetDrawer>555</SetDrawer>
 
         <UploadAndCards></UploadAndCards>

@@ -1,7 +1,7 @@
 import Taro from "@tarojs/taro";
 import _isFunction from "lodash/isFunction";
 /* eslint-disable import/prefer-default-export */
-export const baseurl = "39.106.167.186";
+export const baseurl = "sbxsbbb.xyz";
 export const mapStateToProps = state => {
   const list = state["CList"].list;
   return { list, setlid: state["CList"].setlid };
