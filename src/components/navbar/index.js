@@ -1,10 +1,15 @@
 import _isFunction from "lodash/isFunction";
 import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
+import { connect } from "@tarojs/redux";
 import { getSystemInfo } from "../../utils/functions";
+import action from "../../utils/action";
 import "./index.scss";
 
 let globalSystemInfo = getSystemInfo();
+@connect(state => {
+  return { pplist: state["CList"].pplist };
+})
 class AtComponent extends Component {
   constructor(props) {
     super(props);
@@ -24,39 +29,15 @@ class AtComponent extends Component {
       });
     }
   }
-  handleBackClick() {
-    if (_isFunction(this.props.onBack)) {
-      this.props.onBack();
-    } else {
-      const pages = Taro.getCurrentPages();
-      if (pages.length >= 2) {
-        Taro.navigateBack({
-          delta: this.props.delta
-        });
-      }
-    }
-  }
-  handleGoHomeClick() {
-    if (_isFunction(this.props.onHome)) {
-      this.props.onHome();
-    }
-  }
+
   handleSearchClick() {
     if (_isFunction(this.props.onSearch)) {
       this.props.onSearch();
     }
   }
   static defaultProps = {
-    extClass: "",
     background: "#ffffff", //导航栏背景
-    color: "#000000",
-    title: "",
-    searchText: "点我搜索",
-    searchBar: false,
-    back: false,
-    home: false,
-    iconTheme: "black",
-    delta: 1
+    color: "#000000"
   };
 
   state = {};
@@ -70,7 +51,7 @@ class AtComponent extends Component {
       ios,
       windowWidth
     } = systemInfo;
-    const { back, home, title, color, background } = this.props;
+    const { color, background } = this.props;
     let rightDistance = windowWidth - capsulePosition.right; //胶囊按钮右侧到屏幕右侧的边距
     let leftWidth = windowWidth - capsulePosition.left; //胶囊按钮左侧到屏幕右侧的边距
 
@@ -82,26 +63,9 @@ class AtComponent extends Component {
       `padding-right:${leftWidth}px`,
       `padding-bottom:${navBarExtendHeight}px`
     ].join(";");
-    let navBarLeft = [];
-    if ((back && !home) || (!back && home)) {
-      navBarLeft = [
-        `width:${capsulePosition.width}px`,
-        `height:${capsulePosition.height}px`,
-        `margin-left:0px`,
-        `margin-right:${rightDistance}px`
-      ].join(";");
-    } else if ((back && home) || title) {
-      navBarLeft = [
-        `width:${capsulePosition.width}px`,
-        `height:${capsulePosition.height}px`,
-        `margin-left:${rightDistance}px`
-      ].join(";");
-    } else {
-      navBarLeft = [`width:auto`, `margin-left:0px`].join(";");
-    }
+
     return {
       navigationbarinnerStyle,
-      navBarLeft,
       navBarHeight,
       capsulePosition,
       navBarExtendHeight,
@@ -113,42 +77,14 @@ class AtComponent extends Component {
   render() {
     const {
       navigationbarinnerStyle,
-      navBarLeft,
       navBarHeight,
       capsulePosition,
       navBarExtendHeight,
       ios,
       rightDistance
     } = this.state.configStyle;
-    const {
-      title,
-      background,
-      back,
-      home,
-      searchBar,
-      searchText,
-      iconTheme,
-      extClass
-    } = this.props;
-    let nav_bar__center = null;
-    if (title) {
-      nav_bar__center = <text>{title}</text>;
-    } else if (searchBar) {
-      nav_bar__center = (
-        <View
-          className='lxy-nav-bar-search'
-          style={`height:${capsulePosition.height}px;`}
-          onClick={this.handleSearchClick.bind(this)}
-        >
-          <View className='lxy-nav-bar-search__icon' />
-          <View className='lxy-nav-bar-search__input'>{searchText}</View>
-        </View>
-      );
-    } else {
-      /* eslint-disable */
-      nav_bar__center = this.props.renderCenter;
-      /* eslint-enable */
-    }
+    const { background, extClass } = this.props;
+
     return (
       <View
         className={`lxy-nav-bar ${ios ? "ios" : "android"} ${extClass}`}
@@ -160,50 +96,20 @@ class AtComponent extends Component {
           style={`padding-top: ${navBarHeight + navBarExtendHeight}px;`}
         />
         <View
-          className={`lxy-nav-bar__inner ${ios ? "ios" : "android"}`}
+          className={`at-row at-row__align--start at-row__justify--between at-row--nowrap lxy-nav-bar__inner ${
+            ios ? "ios" : "android"
+          }`}
           style={navigationbarinnerStyle}
         >
-          <View className='lxy-nav-bar__left' style={navBarLeft}>
-            {back && !home && (
-              <View
-                onClick={this.handleBackClick.bind(this)}
-                className={`lxy-nav-bar__button lxy-nav-bar__btn_goback ${iconTheme}`}
-              />
-            )}
-            {!back && home && (
-              <View
-                onClick={this.handleGoHomeClick.bind(this)}
-                className={`lxy-nav-bar__button lxy-nav-bar__btn_gohome ${iconTheme}`}
-              />
-            )}
-            {back && home && (
-              <View
-                className={`lxy-nav-bar__buttons ${ios ? "ios" : "android"}`}
-              >
-                <View
-                  onClick={this.handleBackClick.bind(this)}
-                  className={`lxy-nav-bar__button lxy-nav-bar__btn_goback ${iconTheme}`}
-                />
-                <View
-                  onClick={this.handleGoHomeClick.bind(this)}
-                  className={`lxy-nav-bar__button lxy-nav-bar__btn_gohome ${iconTheme}}`}
-                />
-              </View>
-            )}
-            {!back && !home && this.props.renderLeft}
+          <View className='hiavatar'>
+            <View className='hitext'>xss打印</View>
           </View>
-          <View
-            className='lxy-nav-bar__center'
-            style={`padding-left: ${rightDistance}px`}
-          >
-            {nav_bar__center}
+          {/* <View> */}
+          <View className='at-row  choosepp'>
+            <View className='pp'>选择skdfnksdnf打印点</View>
+            <View className='downarrow'>&#xe603;</View>
           </View>
-          <View
-            className='lxy-nav-bar__right'
-            style={`margin-right: ${rightDistance}px`}
-          >
-            {this.props.renderRight}
-          </View>
+          {/* </View> */}
         </View>
       </View>
     );

@@ -18,7 +18,13 @@ import Ripple from "../Ripple/Ripple";
 // import request from "../../utils/request";
 
 var socket = socketio(`wss://${baseurl}/`);
-@connect(mapStateToProps)
+@connect(state => {
+  return {
+    list: state["CList"].list,
+    triggered: state["CList"].triggered,
+    chooselist: state["CList"].chooselist
+  };
+})
 export default class UploadAndCards extends Component {
   constructor() {
     super(...arguments);
@@ -70,15 +76,26 @@ export default class UploadAndCards extends Component {
         });
     }
     console.log("fuck upload and cards derived state from props");
-    return { list: props.list };
-    return null;
+    return {
+      list: props.list,
+      trigger: props.triggered,
+      chooselist: props.chooselist
+    };
   }
   componentDidMount() {
     socket.on("greetings", data => {
       console.log("received news: ", data);
+      socket.emit("add a weapp", "i am weapp");
     });
     socket.on("change state", data => {
       this.changeCard(data.lid, data);
+    });
+    socket.on("a message", data => {
+      console.log("a message " + data);
+    });
+    socket.on("pp message", data => {
+      console.log(data);
+      this.props.dispatch(action("CList/updatepp", data));
     });
   }
 
@@ -255,7 +272,7 @@ export default class UploadAndCards extends Component {
     });
 
     return (
-      <View>
+      <View style={{}}>
         {/* <View
           id='abc'
           onTouchStart={e => {
@@ -271,17 +288,17 @@ export default class UploadAndCards extends Component {
           ABC
         </View> */}
         <AtMessage />
-        <Ripple>
-          <View
-            className='upload-top'
-            hoverClass='upload-top-blue'
-            onClick={this.tapUploadView.bind(this)}
-            style='z-index:2'
-          >
-            <View className='icon'></View>
-            单击选择文件打印
-          </View>
-        </Ripple>
+
+        <View
+          className='upload-top'
+          hoverClass='upload-top-blue'
+          onClick={this.tapUploadView.bind(this)}
+          style='z-index:2'
+        >
+          <View className='icon'></View>
+          单击选择文件打印
+        </View>
+
         {CardsList}
         <View
           style='width:100px;height:100px;background-color:#8c8c8c;z-index:10'

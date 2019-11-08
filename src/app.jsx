@@ -27,8 +27,8 @@ class App extends Component {
       navigationBarTextStyle: "black",
       // navigationStyle: "default",
       // navigationBarBackgroundColor: "#ffffff",
-      navigationStyle: "custom",
-      enablePullDownRefresh: true
+      navigationStyle: "custom"
+      // enablePullDownRefresh: true
     }
   };
 

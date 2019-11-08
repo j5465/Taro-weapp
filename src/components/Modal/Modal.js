@@ -2,7 +2,6 @@ import Taro, { Component } from "@tarojs/taro";
 import { View, Image, Swiper, SwiperItem } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import classNames from "classnames";
-// import { mapStateToProps } from "../../utils/functions";
 import action from "../../utils/action";
 import { getSystemInfo } from "../../utils/functions";
 import "./Modal.scss";

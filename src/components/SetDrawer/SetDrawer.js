@@ -12,7 +12,9 @@ import action from "../../utils/action";
 import MRadio from "../MRadio/MRadio";
 import "./SetDrawer.scss";
 
-@connect(mapStateToProps)
+@connect(state => {
+  return { list: state["CList"].list, setlid: state["CList"].setlid };
+})
 export default class SetDrawer extends Component {
   constructor() {
     super(...arguments);

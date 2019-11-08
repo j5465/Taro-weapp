@@ -1,0 +1,81 @@
+@import "~taro-ui/dist/style/components/flex.scss";
+@mixin plus {
+  position: fixed;
+  right: 10%;
+  bottom: 10%;
+  z-index: 2000;
+  font-family: "checkfont" !important;
+  font-size: 110px;
+  font-style: normal;
+  color: #096dd9;
+  transition: opacity 0.2s, transform 0.3s;
+}
+.trigger {
+  @include plus;
+  opacity: 1;
+  text-shadow: 0 10rpx 25rpx rgba(0, 0, 0, 0.264);
+}
+.triggered {
+  @include plus;
+  transform: translate(0, 150%);
+  opacity: 0;
+}
+@mixin toolbar_ {
+  z-index: 3000;
+  position: fixed;
+  height: 7%;
+  bottom: 0px;
+  // background-color: #fafafa;
+  box-shadow: 0rpx -4rpx 6px #d9d9d9;
+  padding: 20px 0px 20px 0px;
+  color: #096dd9;
+  font-size: 60px;
+  transition: opacity 0.2s, transform 0.3s;
+}
+
+.toolbar {
+  @include toolbar_;
+  opacity: 1;
+}
+.hidetoolbar {
+  @include toolbar_;
+  opacity: 0;
+  transform: translate(0, 100%);
+}
+.close {
+  font-family: "iconfont" !important;
+  font-size: 70px;
+  margin-right: 24px;
+}
+.choosenum {
+  // margin-right: 46px;
+}
+.chooseallt {
+  font-size: 48px;
+  margin-left: 10px;
+}
+.chooseall {
+  &::before {
+    font-family: "checkfont";
+    content: "\e607";
+  }
+}
+.choosealled {
+  &::before {
+    font-family: "iconfont" !important;
+    content: "\e62f";
+  }
+}
+.delete {
+  font-family: "iconfont" !important;
+  font-size: 68px;
+}
+.print {
+  &::before {
+    font-family: "checkfont";
+    content: "\e75d";
+    font-size: 68px;
+  }
+  .pps {
+  }
+}

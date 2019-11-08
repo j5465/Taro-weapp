@@ -10,8 +10,9 @@
 
   position: relative;
   border-top: solid 2px;
-  font-size: 60px;
+  //
   .uncheckicon {
+    font-size: 62px;
     z-index: 1;
     display: inline-block;
     position: absolute;
@@ -33,6 +34,7 @@
     }
   }
   .checkicon_checked {
+    font-size: 60px;
     z-index: 1;
     display: inline-block;
     position: absolute;

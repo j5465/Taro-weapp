@@ -1,13 +1,12 @@
-import { AtToast, AtButton, AtAvatar, AtIcon, AtProgress } from "taro-ui";
 import Taro, { Component } from "@tarojs/taro";
-import { View, Text, Button, OpenData } from "@tarojs/components";
+import { View } from "@tarojs/components";
 import "./index.scss";
-
+// import { AtAvatar } from "taro-ui";
 import UploadAndCards from "../../components/UploadAndCards/UploadAndCards";
 import NavBar from "../../components/navbar/index";
 import Modal from "../../components/Modal/Modal";
 import SetDrawer from "../../components/SetDrawer/SetDrawer";
-import action from "../../utils/action";
+import BottomBtn from "../../components/BottomBtn/BottomBtn";
 
 export default class Index extends Component {
   config = {
@@ -42,46 +41,23 @@ export default class Index extends Component {
   onScroll(e) {
     console.log(e.detail);
   }
-  render() {
-    const scrollStyle = {
-      height: "500px"
-    };
-    const scrollTop = 0;
-    const Threshold = 20;
-    const vStyleA = {
-      height: "350px",
-      "background-color": "rgb(26, 173, 25)"
-    };
-    const vStyleB = {
-      height: "350px",
-      "background-color": "rgb(39,130,215)"
-    };
-    const vStyleC = {
-      height: "350px",
-      "background-color": "rgb(241,241,241)",
-      color: "#333"
-    };
 
+  render() {
+    console.log(this.props.pplist);
+    //   <AtAvatar
+    //     className='my-avatar'
+    //     size='small'
+    //     circle
+    //     openData={{ type: "userAvatarUrl" }}
+    //   ></AtAvatar>
     return (
       <View className='index'>
-        <NavBar
-          renderLeft={
-            <View style='padding-left:10px '>
-              <AtAvatar
-                className='my-avatar'
-                size='small'
-                circle
-                openData={{ type: "userAvatarUrl" }}
-              ></AtAvatar>
-            </View>
-          }
-          renderCenter={<View style='font-size:44rpx'>打印工具</View>}
-          // renderRight={          }
-        ></NavBar>
+        <NavBar></NavBar>
         <Modal></Modal>
         <SetDrawer>555</SetDrawer>
 
         <UploadAndCards></UploadAndCards>
+        <BottomBtn></BottomBtn>
       </View>
     );
   }

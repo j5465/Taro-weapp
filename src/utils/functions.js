@@ -4,7 +4,8 @@ import _isFunction from "lodash/isFunction";
 export const baseurl = "sbxsbbb.xyz";
 export const mapStateToProps = state => {
   const list = state["CList"].list;
-  return { list, setlid: state["CList"].setlid };
+  return state["CList"];
+  // return { list, setlid: state["CList"].setlid };
 };
 
 export const getExtname = name => {
