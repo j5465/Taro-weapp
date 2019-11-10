@@ -30,6 +30,7 @@ export default class Modal extends Component {
       "modal--active": isOpen
     });
     console.log("modal props", this.props);
+
     var numlist = [];
     for (let i = 1; i <= pagecount; i++) numlist.push(i);
 

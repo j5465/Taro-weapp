@@ -39,7 +39,7 @@ page {
   z-index: 5001;
   /* prettier-ignore */
   height:  var(--navBarHeight);
-  display: flex;
+  // display: flex;
   align-items: center;
   padding-right: var(--right);
   width: 100%;
@@ -68,23 +68,66 @@ page {
   }
 
   .hitext {
+    // padding-bottom: 16px;
   }
 }
 .choosepp {
+  position: relative;
   font-family: "iconfont";
   margin-right: 10px;
   max-width: 55%;
   justify-content: flex-end;
-  // text-align: right;
   .pp {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    // width: 80%;
-
-    // text-align: right;
   }
   .downarrow {
-    // text-align: right;
+    font-size: 38px;
+    // transform: rotate(-180deg);
+    transition: transform 0.2s;
   }
+  .uparrow {
+    font-size: 38px;
+    transform: rotate(180deg);
+    transition: transform 0.2s;
+  }
+}
+// .choosepphover {
+//   color: #69c0ff;
+// }
+.rootclass {
+  z-index: 6000;
+  position: absolute;
+  top: 92%;
+  width: 60%;
+  opacity: 0;
+  background-color: white;
+  border: solid 1px #d9d9d9;
+  box-shadow: 0px 0px 20px #d9d9d9;
+  border-radius: 16px;
+  padding-top: 20px;
+  // padding-bottom: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  transition: opacity 0.2s;
+  &--active {
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
+}
+.app {
+  // position: relative;
+  font-size: 44px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 20px;
+}
+.modal {
+  z-index: 5999;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
 }

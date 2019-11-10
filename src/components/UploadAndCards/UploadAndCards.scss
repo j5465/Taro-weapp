@@ -8,7 +8,7 @@
   margin-right: auto;
   // margin-top: 10px;
   text-align: center;
-  border: 5px dashed;
+  border: 6px dashed;
   border-radius: 20px;
   padding-bottom: 12px;
   .icon {
@@ -17,7 +17,7 @@
       font-size: 170px;
       content: "\e697";
       font-style: normal;
-      color: #69c0ff;
+      // color: #69c0ff;
     }
   }
 }
@@ -30,8 +30,12 @@
     }
   }
 }
+
 .Card {
-  border: solid 5px #d9d9d9;
+  transition: height 1s;
+  position: relative;
+  transition: height 3s;
+  border: solid 6px #d9d9d9;
   max-width: 95%;
   border-radius: 20px;
   margin: auto;
@@ -96,6 +100,22 @@
         }
       }
     }
+  }
+}
+.Cardhva {
+  background-color: #e8e8e8;
+  border: solid 6px #262626;
+}
+.Cardonhover {
+  background-color: #e8e8e8;
+  animation: turnblack 0.35s;
+}
+@keyframes turnblack {
+  from {
+    background-color: #ffffff;
+  }
+  to {
+    background-color: #e8e8e8;
   }
 }
 .Card-2 {

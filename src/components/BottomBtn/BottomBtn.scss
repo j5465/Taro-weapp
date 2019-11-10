@@ -3,12 +3,13 @@
   position: fixed;
   right: 10%;
   bottom: 10%;
-  z-index: 2000;
+  z-index: 10;
   font-family: "checkfont" !important;
   font-size: 110px;
   font-style: normal;
   color: #096dd9;
   transition: opacity 0.2s, transform 0.3s;
+  transition-delay: 0.1s;
 }
 .trigger {
   @include plus;
@@ -21,7 +22,7 @@
   opacity: 0;
 }
 @mixin toolbar_ {
-  z-index: 3000;
+  z-index: 11;
   position: fixed;
   height: 7%;
   bottom: 0px;
@@ -31,6 +32,7 @@
   color: #096dd9;
   font-size: 60px;
   transition: opacity 0.2s, transform 0.3s;
+  transition-delay: 0.1s;
 }
 
 .toolbar {
@@ -42,10 +44,36 @@
   opacity: 0;
   transform: translate(0, 100%);
 }
+@mixin greycircle {
+  position: absolute;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.3);
+  top: 0;
+  left: 0;
+  animation: ripple 0.1s ease-out;
+  content: "";
+  transform: scale(1.5);
+}
 .close {
   font-family: "iconfont" !important;
   font-size: 70px;
   margin-right: 24px;
+  position: relative;
+}
+.greyhover {
+  &::after {
+    @include greycircle();
+  }
+}
+@keyframes ripple {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1.3);
+  }
 }
 .choosenum {
   // margin-right: 46px;
@@ -55,12 +83,14 @@
   margin-left: 10px;
 }
 .chooseall {
+  position: relative;
   &::before {
     font-family: "checkfont";
     content: "\e607";
   }
 }
 .choosealled {
+  position: relative;
   &::before {
     font-family: "iconfont" !important;
     content: "\e62f";
@@ -69,8 +99,10 @@
 .delete {
   font-family: "iconfont" !important;
   font-size: 68px;
+  position: relative;
 }
 .print {
+  position: relative;
   &::before {
     font-family: "checkfont";
     content: "\e75d";

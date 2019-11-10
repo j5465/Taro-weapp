@@ -2,6 +2,7 @@ import { AtProgress, AtMessage, AtButton, AtTag } from "taro-ui";
 import Taro, { Component } from "@tarojs/taro";
 import { View, Image, Text } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
+import classNames from "classnames";
 import {
   mapStateToProps,
   randomString,
@@ -30,10 +31,11 @@ export default class UploadAndCards extends Component {
     super(...arguments);
     // this.tapUploadView.bind(this);
     this.state = {
-      list: []
+      list: [],
+      triggered: false,
+      chooselist: []
     };
   }
-
   // static getDerivedStateFromProps(props, state) {  }
   addCards = alist => {
     //{list:[ , , ]}
@@ -52,18 +54,6 @@ export default class UploadAndCards extends Component {
   static getDerivedStateFromProps(props, state) {
     var ylist = state.list,
       nlist = props.list;
-    // for (let i = 0; i < nlist.length; i++) {
-    //   let nlid = nlist[i].lid;
-    //   for (let j = 0; j < ylist.length; i++) {
-    //     if (ylist[j] == nlid) {
-    //       if (
-    //         nlist[i].printSize != ylist[j].printSize ||
-    //         nlist[i].printOri != ylist[j].printOri
-    //       )
-
-    //     }
-    //   }
-    // }
     for (let i = 0; i < nlist.length; i++) {
       if (
         nlist[i].printSize != undefined &&
@@ -78,7 +68,7 @@ export default class UploadAndCards extends Component {
     console.log("fuck upload and cards derived state from props");
     return {
       list: props.list,
-      trigger: props.triggered,
+      triggered: props.triggered,
       chooselist: props.chooselist
     };
   }
@@ -101,7 +91,7 @@ export default class UploadAndCards extends Component {
 
   tapUploadView() {
     new Promise((resolve, reject) => {
-      wx.chooseMessageFile({
+      Taro.chooseMessageFile({
         count: 10,
         type: "file",
         extension: [".doc", ".docx", ".pdf", ".rtf"],
@@ -133,11 +123,10 @@ export default class UploadAndCards extends Component {
       // console.log("list", payload.concat(this.state.list));
       res.tempFiles.forEach(item => {
         const uploadTask = Taro.uploadFile({
-          url: `https://${baseurl}/uploadfile`,
+          url: `https://${baseurl}/xsscfile`,
           header: {
             "content-type": "multipart/form-data",
-            lid: item.lid,
-            name: item.name
+            lid: item.lid
           },
           filePath: item.path,
           name: "file"
@@ -145,7 +134,6 @@ export default class UploadAndCards extends Component {
           //   console.log("complete rs: ", rs);
           // }
         });
-
         uploadTask.progress(rs => {
           console.log("progress percent: ", rs.progress);
           var newList = this.state.list.map(card => {
@@ -160,11 +148,16 @@ export default class UploadAndCards extends Component {
         uploadTask.then(Thenres => {
           console.log("uploadTask then res: ", Thenres);
           var data = JSON.parse(Thenres.data);
+          console.log("sbname:");
           if (Thenres.statusCode === 200) {
-            socket.emit("fileinfo", {
-              id: data.lid,
-              extname: getExtname(item.name)
-            });
+            const extname = getExtname(item.name);
+            console.log(extname);
+            if (extname == "doc" || extname == "docx" || extname == "rtf")
+              socket.emit("fileinfo", {
+                id: data.lid,
+                extname: getExtname(item.name)
+              });
+            else if (extname == "pdf") socket.emit("pdfinfo", { id: data.lid });
 
             this.changeCard(data.lid, {
               deadLine: data.deadLine,
@@ -172,9 +165,9 @@ export default class UploadAndCards extends Component {
               progressPercent: 100,
               progressStatus: "success"
             });
-          } else if (Thenres.statusCode === 500) {
-            this.handleMessage("文件最大支持10M", "error");
-            console.log(data);
+          } else {
+            // error
+            this.handleMessage("错误:" + Thenres.data.msg);
             this.changeCard(data.lid, {
               progressName: "上传失败",
               progressStatus: "error"
@@ -187,8 +180,41 @@ export default class UploadAndCards extends Component {
       });
     });
   }
+  handleLongPress(lid) {
+    console.log(lid, this.state.chooselist);
 
+    this.props.dispatch(
+      action("CList/save", {
+        triggered: true,
+        chooselist: this.state.chooselist.concat(lid)
+      })
+    );
+  }
+  handleToggleCard(lid, hav) {
+    var chooselist = this.state.chooselist;
+    console.log("handleToggleCard", chooselist, lid, hav, this.state.triggered);
+    if (this.state.triggered) {
+      if (hav) {
+        chooselist.splice(this.state.chooselist.indexOf(lid), 1);
+        console.log(chooselist);
+        this.props.dispatch(
+          action("CList/save", {
+            chooselist: chooselist,
+            triggered: chooselist.length == 0 ? false : true
+          })
+        );
+      } else
+        this.props.dispatch(
+          action("CList/save", {
+            chooselist: this.state.chooselist.concat(lid)
+          })
+        );
+    } else {
+      //navigate
+    }
+  }
   render() {
+    console.log("cards", this.state.chooselist);
     const CardsList = this.state.list.map((card, i) => {
       const name = card.name,
         progressName = card.progressName,
@@ -199,11 +225,53 @@ export default class UploadAndCards extends Component {
         Pages = card.printPages,
         Copies = card.printCopies,
         totalpages = card[Size + "" + Ori + "_"],
-        progressColor = StatusToColor(progressStatus);
+        progressColor = StatusToColor(progressStatus),
+        hav = this.state.chooselist.indexOf(card.lid) == -1 ? false : true,
+        CardClass = classNames("Card", { Cardonhover: this.state[card.lid] });
 
-      console.log("cards");
+      console.log("cardlid", card, CardClass);
+
       return (
-        <View className='Card' key={card.lid}>
+        <View
+          className={CardClass}
+          style={
+            hav
+              ? {
+                  "background-color": "#e8e8e8",
+                  border: "solid 6rpx #262626"
+                }
+              : ""
+          }
+          id={card.lid}
+          key={card.lid}
+          onLongPress={() => {
+            if (Size + "" + Ori + "_" in card) this.handleLongPress(card.lid);
+          }}
+          onTouchStart={() => {
+            console.log(
+              "on touch start",
+              card[Size + "" + Ori + "_"],
+              Size + "" + Ori + "_",
+              Size + "" + Ori + "_" in card
+            );
+
+            if (Size + "" + Ori + "_" in card) {
+              console.log("ctmctmIn ");
+              const ns = {};
+              ns[card.lid] = true;
+              this.setState(ns);
+            }
+          }}
+          onTouchEnd={() => {
+            const ns = {};
+            ns[card.lid] = false;
+            this.setState(ns);
+          }}
+          onClick={() => {
+            if (Size + "" + Ori + "_" in card)
+              this.handleToggleCard(card.lid, hav);
+          }}
+        >
           <View className='Card-1'>
             <Image
               className='file_type'
@@ -213,7 +281,7 @@ export default class UploadAndCards extends Component {
               <View className='at-row at-row__justify--between at-row__align--center name_row'>
                 <View className='at-col  name'>{name}</View>
                 <View className='at-col at-col-1 at-col--auto valid_time'>
-                  {DeadLineToTime(card.deadLine)}
+                  {Pages != undefined ? DeadLineToTime(card.deadLine) : " "}
                 </View>
               </View>
               <View className=' at-row at-row__justify--between at-row__align--center  progress_row'>
@@ -234,13 +302,17 @@ export default class UploadAndCards extends Component {
                         color={progressColor}
                       ></AtProgress>
                     </View>
-                    <View className='at-col at-col-1 at-col--auto'>
+                    <View
+                      className='at-col at-col-1 at-col--auto'
+                      hoverStopPropagation
+                    >
                       <AtButton
                         circle
                         size='small'
                         type='primary'
                         onClick={() => {
-                          this.idInSet(card.lid);
+                          if (Size + "" + Ori + "_" in card)
+                            this.idInSet(card.lid);
                         }}
                       >
                         打印设置

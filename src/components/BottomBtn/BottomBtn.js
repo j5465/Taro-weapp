@@ -9,22 +9,32 @@ import "./BottomBtn.scss";
   return {
     triggered: state["CList"].triggered,
     chooselist: state["CList"].chooselist,
-    dcount: state["CList"].list.length
+    dcount: state["CList"].list.length,
+    ppchoosed: state["CList"].ppchoosed
   };
 })
 export default class BottomBtn extends Component {
   constructor() {
     super(...arguments);
+    this.state = {
+      triggered: false,
+      num: 0,
+      dcount: 0,
+      ppchoosed: -1
+    };
   }
   static getDerivedStateFromProps(props, state) {
     return {
       triggered: props.triggered,
       num: props.chooselist.length,
-      dcount: props.dcount
+      dcount: props.dcount,
+      ppchoosed: props.ppchoosed
     };
   }
-  test() {
-    console.log("test");
+  handleClickPrint() {
+    if (!this.state.num > 0) return;
+    if (this.state.ppchoosed >= 0) console.log("start print");
+    else this.props.dispatch(action("CList/save", { chooseing: true }));
   }
   render() {
     console.log("triggered");
@@ -53,10 +63,13 @@ export default class BottomBtn extends Component {
             <View className='at-row  at-row__align--center'>
               <View
                 className='close'
+                hoverClass='greyhover'
+                hoverStayTime={200}
+                hoverStartTime={10}
                 onClick={() => {
                   console.log("fuckclose");
                   this.props.dispatch(
-                    action("CList/save", { triggered: false })
+                    action("CList/save", { triggered: false, chooselist: [] })
                   );
                 }}
               >
@@ -74,6 +87,9 @@ export default class BottomBtn extends Component {
                     ? "ed"
                     : "")
                 }
+                // hoverClass='greyhover'
+                hoverStayTime={200}
+                hoverStartTime={10}
                 onClick={
                   this.state.dcount == 0
                     ? () => {}
@@ -87,6 +103,9 @@ export default class BottomBtn extends Component {
           </View>
           <View
             className='delete'
+            hoverClass='greyhover'
+            hoverStayTime={200}
+            hoverStartTime={10}
             onClick={() => {
               this.props.dispatch(action("CList/removecard", {}));
             }}
@@ -94,7 +113,14 @@ export default class BottomBtn extends Component {
             &#xe661;
           </View>
 
-          <View className='print'></View>
+          <View
+            className='print'
+            hoverClass={this.state.num > 0 ? "greyhover" : ""}
+            style={this.state.num > 0 ? {} : { opacity: 0.5 }}
+            hoverStayTime={200}
+            hoverStartTime={10}
+            onClick={this.handleClickPrint}
+          ></View>
         </View>
       </View>
     );

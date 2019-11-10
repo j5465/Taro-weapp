@@ -30,7 +30,7 @@
   }
   &--active {
     visibility: visible;
-    z-index: 5;
+    z-index: 13;
     .modal__overlay,
     .modal__content {
       opacity: 1;

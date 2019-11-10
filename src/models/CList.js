@@ -3,11 +3,30 @@
 export default {
   namespace: "CList",
   state: {
-    list: [],
+    list: [
+      {
+        "10": true,
+        "10_": 1,
+        deadLine: 1573885648745,
+        lid: "SygENvabYB",
+        name: "small.docx",
+        printCopies: 1,
+        printOri: 0,
+        printPages: [1],
+        printSize: 1,
+        progressName: "读取成功",
+        progressPercent: 100,
+        progressStatus: "success"
+      }
+    ],
     setlid: "",
-    triggered: true,
+
+    triggered: false,
     chooselist: [],
-    pplist: []
+
+    pplist: [],
+    ppchoosed: -1, //index
+    chooseing: false
   },
 
   effects: {
@@ -32,22 +51,26 @@ export default {
           newlist[i] = { ...newlist[i], ...payload.dict };
       return { ...state, ...{ list: newlist.concat([]) } };
     },
+
     idInSet(state, { payload }) {
       return { ...state, ...{ setlid: payload.lid } };
       // return { list: state.list.concat([]), setlid: payload.lid };
     },
+
     removeset(state, { payload }) {
       return { ...state, ...{ list: state.list.concat([]), setlid: "" } };
-      // return { list: state.list.concat([]), setlid: "" };
     },
+    //bottom button choose all
     chooseall(state, { payload }) {
       var newlist = [];
+      //if not choosed all
       if (state.list.length != state.chooselist.length) {
         for (let i = 0; i < state.list.length; i++)
           newlist.push(state.list[i].lid);
       }
       return { ...state, ...{ chooselist: newlist } };
     },
+    //remove selected card
     removecard(state, { payload }) {
       var newlist = state.list;
       for (let i = 0; i < state.chooselist.length; i++)
@@ -55,16 +78,20 @@ export default {
           if (state.chooselist[i] == state.list[j].lid) newlist.splice(j, 1);
       return { ...state, ...{ list: newlist, chooselist: [] } };
     },
+    //add true/false  ppname
     updatepp(state, { payload }) {
-      //add true/false  ppname
       var newpplist = state.pplist,
+        ppchoosed = state.ppchoosed,
         ind = newpplist.indexOf(payload.name);
       if (ind == -1) {
         if (payload.bool_add) newpplist.push(payload.name);
       } else {
-        if (payload.bool_add == false) newpplist.splice(ind, 1);
+        if (payload.bool_add == false) {
+          newpplist.splice(ind, 1);
+          if (ind == ppchoosed) ppchoosed = -1;
+        }
       }
-      return { ...state, ...{ pplist: newpplist } };
+      return { ...state, ...{ pplist: newpplist, ppchoosed: ppchoosed } };
     }
   }
 };

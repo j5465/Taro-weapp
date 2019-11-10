@@ -6,6 +6,7 @@ import {
   mapStateToProps,
   ArrayToString,
   getSystemInfo,
+  getExtname,
   baseurl
 } from "../../utils/functions";
 import action from "../../utils/action";
@@ -30,19 +31,26 @@ export default class SetDrawer extends Component {
     for (let i = 0; i < props.list.length; i++)
       if (props.list[i].lid === props.setlid) {
         console.log(props.list[i]);
-        return { card: props.list[i], show: true };
+        const extname = getExtname(props.list[i].name);
+        var ispdf = false;
+        if (extname != "doc" && extname != "docx" && extname != "rtf")
+          ispdf = true;
+
+        return { card: props.list[i], show: true, ispdf: ispdf };
       }
-    return { show: false, card: undefined };
+    return { show: false, card: undefined, ispdf: false };
   }
   onClose = () => {
     this.props.dispatch(action("CList/removeset", {}));
     console.log("Drawer on Close");
   };
   handleChangeSize(value) {
-    this.changeCard(this.state.card.lid, { printSize: value });
+    if (this.state.ispdf == false)
+      this.changeCard(this.state.card.lid, { printSize: value });
   }
   handleChangeOri(value) {
-    this.changeCard(this.state.card.lid, { printOri: value });
+    if (this.state.ispdf == false)
+      this.changeCard(this.state.card.lid, { printOri: value });
   }
   handleChangetoggle(pagenum, hav) {
     if (hav)
@@ -63,14 +71,16 @@ export default class SetDrawer extends Component {
     const { navBarHeight, navBarExtendHeight } = getSystemInfo(),
       card = this.state.card;
 
-    var pagesString, choosefontsize, set, done, id_set;
+    var pagesString, choosefontsize, set, done, id_set, imgurl;
     if (card != undefined && "printPages" in card == true) {
       console.log(card);
       (set = card.printSize + "" + card.printOri),
         (done = card[set] == undefined ? false : true),
-        (id_set = card.lid + "_" + card.printSize + "" + card.printOri);
+        (id_set = card.lid + "_" + card.printSize + "" + card.printOri),
+        (imgurl = this.state.ispdf ? card.lid : id_set);
 
       var FullprintPages = [];
+
       for (let i = 1; i <= card[set + "_"]; i++) FullprintPages.push(i);
       console.log(set, done);
       if (done)
@@ -80,7 +90,7 @@ export default class SetDrawer extends Component {
           return (
             <View className='page_img' key={id_set + index}>
               <Image
-                src={`https://${baseurl}/img/page/${id_set}/${index}`}
+                src={`https://${baseurl}/img/page/${imgurl}/${index}`}
                 style='width: 100%'
                 mode='widthFix'
               ></Image>
@@ -160,11 +170,15 @@ export default class SetDrawer extends Component {
               options={[
                 {
                   label: "A3",
-                  value: 0
+                  value: 0,
+                  disabled:
+                    this.state.ispdf && card.printSize != 0 ? true : false
                 },
                 {
                   label: "A4",
-                  value: 1
+                  value: 1,
+                  disabled:
+                    this.state.ispdf && card.printSize != 1 ? true : false
                 }
               ]}
               value={card.printSize}
@@ -174,11 +188,15 @@ export default class SetDrawer extends Component {
               options={[
                 {
                   label: "纵向",
-                  value: 0
+                  value: 0,
+                  disabled:
+                    this.state.ispdf && card.printOri != 0 ? true : false
                 },
                 {
                   label: "横向",
-                  value: 1
+                  value: 1,
+                  disabled:
+                    this.state.ispdf && card.printOri != 1 ? true : false
                 }
               ]}
               value={card.printOri}
@@ -194,7 +212,6 @@ export default class SetDrawer extends Component {
               value={0}
               choosefontsize={choosefontsize}
               loading={done != true}
-              // onClick={this.handleChange.bind(this)}
             ></MRadio>
           </View>
         )}

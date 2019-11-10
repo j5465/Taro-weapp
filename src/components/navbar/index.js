@@ -3,12 +3,17 @@ import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import { getSystemInfo } from "../../utils/functions";
+import classNames from "classnames";
 import action from "../../utils/action";
 import "./index.scss";
 
 let globalSystemInfo = getSystemInfo();
 @connect(state => {
-  return { pplist: state["CList"].pplist };
+  return {
+    pplist: state["CList"].pplist,
+    ppchoosed: state["CList"].ppchoosed,
+    chooseing: state["CList"].chooseing
+  };
 })
 class AtComponent extends Component {
   constructor(props) {
@@ -67,24 +72,51 @@ class AtComponent extends Component {
     return {
       navigationbarinnerStyle,
       navBarHeight,
-      capsulePosition,
       navBarExtendHeight,
       ios,
-      rightDistance
+      leftWidth
     };
   }
-
+  handleChooseClick() {
+    this.props.dispatch(
+      action("CList/save", { chooseing: !this.props.chooseing })
+    );
+  }
   render() {
     const {
       navigationbarinnerStyle,
       navBarHeight,
-      capsulePosition,
       navBarExtendHeight,
       ios,
-      rightDistance
+      leftWidth
     } = this.state.configStyle;
     const { background, extClass } = this.props;
+    const pp =
+      this.props.ppchoosed < 0
+        ? "选择打印点"
+        : this.props.pplist[this.props.ppchoosed];
 
+    const rootclass = classNames("rootclass", {
+      "rootclass--active": this.props.chooseing
+    });
+    const rootStyle = {
+      right: `10px`
+    };
+    const pplistview = this.props.pplist.map((name, index) => {
+      return (
+        <View
+          className='app'
+          onClick={() => {
+            if (index != this.props.ppchoosed)
+              this.props.dispatch(action("CList/save", { ppchoosed: index }));
+            this.handleChooseClick();
+          }}
+        >
+          {" "}
+          {name}
+        </View>
+      );
+    });
     return (
       <View
         className={`lxy-nav-bar ${ios ? "ios" : "android"} ${extClass}`}
@@ -105,11 +137,34 @@ class AtComponent extends Component {
             <View className='hitext'>xss打印</View>
           </View>
           {/* <View> */}
-          <View className='at-row  choosepp'>
-            <View className='pp'>选择skdfnksdnf打印点</View>
-            <View className='downarrow'>&#xe603;</View>
+          <View
+            className='at-row  choosepp '
+            // hoverClass='choosepphover'
+            onClick={this.handleChooseClick}
+          >
+            <View className='pp'>{pp}</View>
+            <View className={this.props.chooseing ? "uparrow" : "downarrow"}>
+              &#xe603;
+            </View>
           </View>
-          {/* </View> */}
+          <View className={rootclass} style={rootStyle}>
+            {this.props.pplist.length != 0 ? (
+              pplistview
+            ) : (
+              <View
+                className='app'
+                onClick={() => {
+                  this.handleChooseClick();
+                  console.log("fuck");
+                }}
+              >
+                无
+              </View>
+            )}
+          </View>
+          {this.props.chooseing && (
+            <View className='modal' onClick={this.handleChooseClick}></View>
+          )}
         </View>
       </View>
     );
