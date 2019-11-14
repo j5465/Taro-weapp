@@ -1,9 +1,8 @@
-import { AtButton, AtDrawer, AtInputNumber } from "taro-ui";
+import { AtDrawer, AtInputNumber } from "taro-ui";
 import Taro, { Component } from "@tarojs/taro";
-import { View, Image, ScrollView } from "@tarojs/components";
+import { View, Image } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import {
-  mapStateToProps,
   ArrayToString,
   getSystemInfo,
   getExtname,
@@ -76,8 +75,8 @@ export default class SetDrawer extends Component {
       console.log(card);
       (set = card.printSize + "" + card.printOri),
         (done = card[set] == undefined ? false : true),
-        (id_set = card.lid + "_" + card.printSize + "" + card.printOri),
-        (imgurl = this.state.ispdf ? card.lid : id_set);
+        (id_set = card.lid + "_" + set),
+        (imgurl = card.ispdf ? card.lid : id_set);
 
       var FullprintPages = [];
 
@@ -117,7 +116,6 @@ export default class SetDrawer extends Component {
                 <View
                   className='uncheckicon'
                   hoverClass='uncheckicon_onhover'
-                  // hoverClass="checkicon_checked"
                   onClick={() => {
                     this.handleChangetoggle(index, hav);
                   }}
@@ -137,7 +135,12 @@ export default class SetDrawer extends Component {
     }
     console.log(pagesString);
     return (
-      <AtDrawer show={this.state.show} mask onClose={this.onClose.bind(this)}>
+      <AtDrawer
+        right
+        show={this.state.show}
+        mask
+        onClose={this.onClose.bind(this)}
+      >
         <View
           className='fill_statusBarHeight'
           style={`height:${navBarHeight + navBarExtendHeight}px;`}
@@ -233,7 +236,6 @@ export default class SetDrawer extends Component {
             />
           </View>
         </View>
-        {done == true && imglist}
       </AtDrawer>
     );
   }

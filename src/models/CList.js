@@ -10,7 +10,7 @@ export default {
         deadLine: 1573885648745,
         lid: "SygENvabYB",
         name: "small.docx",
-        printCopies: 1,
+        printCopies: 10,
         printOri: 0,
         printPages: [1],
         printSize: 1,
@@ -19,14 +19,20 @@ export default {
         progressStatus: "success"
       }
     ],
-    setlid: "",
 
+    unabledcardlist: [],
+
+    setlid: "",
     triggered: false,
     chooselist: [],
 
+    viewlid: "SygENvabYB",
+
     pplist: [],
     ppchoosed: -1, //index
-    chooseing: false
+    chooseing: false,
+
+    sendToprint: false
   },
 
   effects: {

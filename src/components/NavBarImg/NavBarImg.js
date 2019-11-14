@@ -1,20 +1,12 @@
 import _isFunction from "lodash/isFunction";
 import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
-import { connect } from "@tarojs/redux";
 import { getSystemInfo } from "../../utils/functions";
 import classNames from "classnames";
-import action from "../../utils/action";
-import "./index.scss";
+import "./NavBarImg.scss";
 
 let globalSystemInfo = getSystemInfo();
-@connect(state => {
-  return {
-    pplist: state["CList"].pplist,
-    ppchoosed: state["CList"].ppchoosed,
-    chooseing: state["CList"].chooseing
-  };
-})
+
 class AtComponent extends Component {
   constructor(props) {
     super(props);
@@ -90,34 +82,8 @@ class AtComponent extends Component {
       ios,
       leftWidth
     } = this.state.configStyle;
-    const { background, extClass } = this.props;
-    const pp =
-      this.props.ppchoosed < 0
-        ? "选择打印点"
-        : this.props.pplist[this.props.ppchoosed];
+    const { background, extClass, fn, choosed_pages } = this.props;
 
-    const rootclass = classNames("rootclass", {
-      "rootclass--active": this.props.chooseing
-    });
-    var rootStyle = {
-      right: `10px`
-    };
-    if (this.props.chooseing != true) rootStyle["pointer-events"] = "none";
-
-    const pplistview = this.props.pplist.map((name, index) => {
-      return (
-        <View
-          className='app'
-          onClick={() => {
-            if (index != this.props.ppchoosed)
-              this.props.dispatch(action("CList/save", { ppchoosed: index }));
-            this.handleChooseClick();
-          }}
-        >
-          {name}
-        </View>
-      );
-    });
     return (
       <View
         className={`lxy-nav-bar ${ios ? "ios" : "android"} ${extClass}`}
@@ -129,43 +95,18 @@ class AtComponent extends Component {
           style={`padding-top: ${navBarHeight + navBarExtendHeight}px;`}
         />
         <View
-          className={`at-row at-row__align--start at-row__justify--between at-row--nowrap lxy-nav-bar__inner ${
+          className={`at-row at-row__align--start  at-row--nowrap lxy-nav-bar__inner ${
             ios ? "ios" : "android"
           }`}
           style={navigationbarinnerStyle}
         >
-          <View className='hiavatar'>
-            <View className='hitext'>xss打印</View>
+          <View className='back' onClick={Taro.navigateBack}>
+            &#xe601;
           </View>
-
-          <View
-            className='at-row  choosepp '
-            // hoverClass='choosepphover'
-            onClick={this.handleChooseClick}
-          >
-            <View className='pp'>{pp}</View>
-            <View className={this.props.chooseing ? "uparrow" : "downarrow"}>
-              &#xe603;
-            </View>
+          <View className='name_pages'>
+            <View className='fn'>{fn}</View>
+            <View className='choosed_pages'>{choosed_pages}</View>
           </View>
-          <View className={rootclass} style={rootStyle}>
-            {this.props.pplist.length != 0 ? (
-              pplistview
-            ) : (
-              <View
-                className='app'
-                onClick={() => {
-                  this.handleChooseClick();
-                  console.log("fuck");
-                }}
-              >
-                无
-              </View>
-            )}
-          </View>
-          {this.props.chooseing && (
-            <View className='modal' onClick={this.handleChooseClick}></View>
-          )}
         </View>
       </View>
     );

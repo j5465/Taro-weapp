@@ -1,6 +1,6 @@
 import { AtProgress, AtMessage, AtButton, AtTag } from "taro-ui";
 import Taro, { Component } from "@tarojs/taro";
-import { View, Image, Text } from "@tarojs/components";
+import { View, Image } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import classNames from "classnames";
 import {
@@ -16,14 +16,17 @@ import action from "../../utils/action";
 import "./UploadAndCards.scss";
 import socketio from "weapp.socket.io";
 import Ripple from "../Ripple/Ripple";
-// import request from "../../utils/request";
 
 var socket = socketio(`wss://${baseurl}/`);
 @connect(state => {
   return {
     list: state["CList"].list,
     triggered: state["CList"].triggered,
-    chooselist: state["CList"].chooselist
+    chooselist: state["CList"].chooselist,
+    sendToprint: state["CList"].sendToprint,
+    pplist: state["CList"].pplist,
+    ppchoosed: state["CList"].ppchoosed,
+    unabledcardlist: state["CList"].unabledcardlist
   };
 })
 export default class UploadAndCards extends Component {
@@ -53,7 +56,8 @@ export default class UploadAndCards extends Component {
   }
   static getDerivedStateFromProps(props, state) {
     var ylist = state.list,
-      nlist = props.list;
+      nlist = props.list,
+      printmessage = [];
     for (let i = 0; i < nlist.length; i++) {
       if (
         nlist[i].printSize != undefined &&
@@ -64,20 +68,48 @@ export default class UploadAndCards extends Component {
           set: nlist[i].printSize + "" + nlist[i].printOri,
           extname: getExtname(nlist[i].name)
         });
+
+      if (
+        props.sendToprint == true &&
+        state.chooselist.indexOf(nlist[i].lid) != -1
+      ) {
+        printmessage.push({
+          printSize: nlist[i].printSize,
+          printOri: nlist[i].printOri,
+          printPages: nlist[i].printPages,
+          printCopies: nlist[i].printCopies,
+          isPdf: getExtname(nlist[i].name) == "pdf" ? true : false,
+          id: nlist[i].lid,
+          name: nlist[i].name
+        });
+      }
+    }
+    if (printmessage.length != 0) {
+      console.log("sbsbsbsb", props.pplist, props.ppchoosed);
+      socket.emit("sendToprint", {
+        printmessage: printmessage,
+        pp: props.pplist[props.ppchoosed]
+      });
     }
     console.log("fuck upload and cards derived state from props");
     return {
       list: props.list,
       triggered: props.triggered,
-      chooselist: props.chooselist
+      chooselist: props.chooselist,
+      sendToprint: props.sendToprint
     };
   }
   componentDidMount() {
+    // Taro.navigateTo({ url: "/pages/ImgPage/ImgPage" });
     socket.on("greetings", data => {
       console.log("received news: ", data);
       socket.emit("add a weapp", "i am weapp");
     });
     socket.on("change state", data => {
+      if (data.progressName == "正在打印" && data.progressPercent == 100) {
+        data.progressName = "打印完成";
+        data.progressStatus = "success";
+      }
       this.changeCard(data.lid, data);
     });
     socket.on("a message", data => {
@@ -113,7 +145,8 @@ export default class UploadAndCards extends Component {
           progressPercent: 0,
           progressName: "正在上传",
           progressStatus: "progress",
-          deadLine: ""
+          deadLine: "",
+          ispdf: getExtname(res.tempFiles[i].name) == "pdf" ? true : false
         });
         // console.log(res.tempFiles[i]);
       }
@@ -193,7 +226,7 @@ export default class UploadAndCards extends Component {
   handleToggleCard(lid, hav) {
     var chooselist = this.state.chooselist;
     console.log("handleToggleCard", chooselist, lid, hav, this.state.triggered);
-    if (this.state.triggered) {
+    if (this.state.triggered && this.props.unabledcardlist.indexOf(lid) == -1) {
       if (hav) {
         chooselist.splice(this.state.chooselist.indexOf(lid), 1);
         console.log(chooselist);
@@ -211,6 +244,8 @@ export default class UploadAndCards extends Component {
         );
     } else {
       //navigate
+      console.log("fuck navigateto");
+      Taro.navigateTo({ url: "/pages/ImgPage/ImgPage" });
     }
   }
   render() {
@@ -226,26 +261,34 @@ export default class UploadAndCards extends Component {
         Copies = card.printCopies,
         totalpages = card[Size + "" + Ori + "_"],
         progressColor = StatusToColor(progressStatus),
-        hav = this.state.chooselist.indexOf(card.lid) == -1 ? false : true,
-        CardClass = classNames("Card", { Cardonhover: this.state[card.lid] });
+        CardClass = classNames("Card", { Cardonhover: this.state[card.lid] }),
+        hav = this.state.chooselist.indexOf(card.lid) == -1 ? false : true;
+      var cardstyle = {};
+      if (hav) {
+        cardstyle = {
+          "background-color": "#e8e8e8",
+          border: "solid 6rpx #262626"
+        };
+      }
 
-      console.log("cardlid", card, CardClass);
+      console.log(
+        "cardlid",
+        card,
+        this.props.unabledcardlist.indexOf(card.lid)
+      );
 
       return (
         <View
           className={CardClass}
-          style={
-            hav
-              ? {
-                  "background-color": "#e8e8e8",
-                  border: "solid 6rpx #262626"
-                }
-              : ""
-          }
+          style={cardstyle}
           id={card.lid}
           key={card.lid}
           onLongPress={() => {
-            if (Size + "" + Ori + "_" in card) this.handleLongPress(card.lid);
+            if (
+              Size + "" + Ori + "_" in card &&
+              this.props.unabledcardlist.indexOf(card.lid) == -1
+            )
+              this.handleLongPress(card.lid);
           }}
           onTouchStart={() => {
             console.log(
@@ -255,7 +298,10 @@ export default class UploadAndCards extends Component {
               Size + "" + Ori + "_" in card
             );
 
-            if (Size + "" + Ori + "_" in card) {
+            if (
+              Size + "" + Ori + "_" in card &&
+              this.props.unabledcardlist.indexOf(card.lid) == -1
+            ) {
               console.log("ctmctmIn ");
               const ns = {};
               ns[card.lid] = true;
@@ -306,17 +352,22 @@ export default class UploadAndCards extends Component {
                       className='at-col at-col-1 at-col--auto'
                       hoverStopPropagation
                     >
-                      <AtButton
-                        circle
-                        size='small'
-                        type='primary'
-                        onClick={() => {
-                          if (Size + "" + Ori + "_" in card)
-                            this.idInSet(card.lid);
-                        }}
-                      >
-                        打印设置
-                      </AtButton>
+                      <View onClick={e => e.stopPropagation()}>
+                        <AtButton
+                          circle
+                          size='small'
+                          type='primary'
+                          onClick={() => {
+                            if (
+                              Size + "" + Ori + "_" in card &&
+                              this.props.unabledcardlist.indexOf(card.lid) == -1
+                            )
+                              this.idInSet(card.lid);
+                          }}
+                        >
+                          打印设置
+                        </AtButton>
+                      </View>
                     </View>
                   </View>
                 </View>

@@ -28,16 +28,25 @@ export default class BottomBtn extends Component {
       triggered: props.triggered,
       num: props.chooselist.length,
       dcount: props.dcount,
-      ppchoosed: props.ppchoosed
+      ppchoosed: props.ppchoosed,
+      chooselist: props.chooselist
     };
   }
   handleClickPrint() {
     if (!this.state.num > 0) return;
-    if (this.state.ppchoosed >= 0) console.log("start print");
-    else this.props.dispatch(action("CList/save", { chooseing: true }));
+    if (this.state.ppchoosed >= 0) {
+      this.props.dispatch(
+        action("CList/save", {
+          sendToprint: true,
+          chooselist: [],
+          unabledcardlist: this.state.chooselist
+        })
+      );
+      console.log("start print");
+    } else this.props.dispatch(action("CList/save", { chooseing: true }));
   }
   render() {
-    console.log("triggered");
+    console.log("triggered", this.state.num);
     const chooseall_opacity = this.state.dcount == 0 ? 0.5 : 1;
 
     return (
@@ -52,6 +61,7 @@ export default class BottomBtn extends Component {
           }}
         >
           &#xe7ba;
+          <View className='whitebg'></View>
         </View>
         <View
           className={
@@ -87,7 +97,6 @@ export default class BottomBtn extends Component {
                     ? "ed"
                     : "")
                 }
-                // hoverClass='greyhover'
                 hoverStayTime={200}
                 hoverStartTime={10}
                 onClick={
@@ -115,7 +124,8 @@ export default class BottomBtn extends Component {
 
           <View
             className='print'
-            hoverClass={this.state.num > 0 ? "greyhover" : ""}
+            // hoverClass={this.state.num > 0 ? "greyhover" : ""}
+            hoverClass='greyhover'
             style={this.state.num > 0 ? {} : { opacity: 0.5 }}
             hoverStayTime={200}
             hoverStartTime={10}

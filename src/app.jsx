@@ -20,7 +20,7 @@ const dvaApp = dva.createApp({
 const store = dvaApp.getStore();
 class App extends Component {
   config = {
-    pages: ["pages/index/index"],
+    pages: ["pages/index/index", "pages/ImgPage/ImgPage"],
     window: {
       // backgroundTextStyle: "light",
       // navigationBarTitleText: "WeChat",
