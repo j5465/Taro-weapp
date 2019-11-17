@@ -1,13 +1,7 @@
 import Taro from "@tarojs/taro";
 import _isFunction from "lodash/isFunction";
-/* eslint-disable import/prefer-default-export */
-export const baseurl = "sbxsbbb.xyz";
-export const mapStateToProps = state => {
-  const list = state["CList"].list;
-  return state["CList"];
-  // return { list, setlid: state["CList"].setlid };
-};
 
+export const baseurl = "sbxsbbb.xyz";
 export const getExtname = name => {
   return name.split(".").reverse()[0];
 };
@@ -100,7 +94,7 @@ export const ArrayToString = arr => {
     return a - b;
   });
   // console.log(arr);
-  for (var i = 0, j = 1; i < arr.length; i = j) {
+  for (var i = 0, j; i < arr.length; i = j) {
     j = i + 1;
     while (j < arr.length && arr[j] - 1 === arr[j - 1]) {
       j++;

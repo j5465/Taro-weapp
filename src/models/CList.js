@@ -3,22 +3,7 @@
 export default {
   namespace: "CList",
   state: {
-    list: [
-      {
-        "10": true,
-        "10_": 1,
-        deadLine: 1573885648745,
-        lid: "SygENvabYB",
-        name: "small.docx",
-        printCopies: 10,
-        printOri: 0,
-        printPages: [1],
-        printSize: 1,
-        progressName: "读取成功",
-        progressPercent: 100,
-        progressStatus: "success"
-      }
-    ],
+    list: [],
 
     unabledcardlist: [],
 
@@ -26,7 +11,7 @@ export default {
     triggered: false,
     chooselist: [],
 
-    viewlid: "SygENvabYB",
+    viewlid: "",
 
     pplist: [],
     ppchoosed: -1, //index
@@ -34,14 +19,6 @@ export default {
 
     sendToprint: false
   },
-
-  effects: {
-    // *add({ payload }, { call, put }) {
-    //   var newList = payload.concat(state.list);
-    //   console.log(newList);
-    // }
-  },
-
   reducers: {
     save(state, { payload }) {
       return { ...state, ...payload };

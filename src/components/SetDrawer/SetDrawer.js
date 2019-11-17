@@ -51,89 +51,40 @@ export default class SetDrawer extends Component {
     if (this.state.ispdf == false)
       this.changeCard(this.state.card.lid, { printOri: value });
   }
-  handleChangetoggle(pagenum, hav) {
-    if (hav)
-      this.changeCard(this.state.card.lid, {
-        printPages: this.state.card.printPages.filter((value, index, arr) => {
-          return value != pagenum;
-        })
-      });
-    else
-      this.changeCard(this.state.card.lid, {
-        printPages: this.state.card.printPages.concat(pagenum)
-      });
-  }
+
   handleChangeCopies(value) {
-    this.changeCard(this.state.card.lid, { printCopies: value });
+    this.changeCard(this.state.card.lid, { printCopies: parseInt(value) });
   }
   render() {
     const { navBarHeight, navBarExtendHeight } = getSystemInfo(),
       card = this.state.card;
 
-    var pagesString, choosefontsize, set, done, id_set, imgurl;
-    if (card != undefined && "printPages" in card == true) {
-      console.log(card);
+    var pagesString = "打印页码: ",
+      choosefontsize,
+      set,
+      done,
+      id_set,
+      imgurl;
+
+    if (
+      card != undefined &&
+      card.printSize + "" + card.printOri + "printPages" in card == true
+    ) {
+      console.log("setdrawercard:", card);
       (set = card.printSize + "" + card.printOri),
         (done = card[set] == undefined ? false : true),
         (id_set = card.lid + "_" + set),
         (imgurl = card.ispdf ? card.lid : id_set);
 
-      var FullprintPages = [];
+      pagesString = pagesString + ArrayToString(card[set + "printPages"]);
 
-      for (let i = 1; i <= card[set + "_"]; i++) FullprintPages.push(i);
-      console.log(set, done);
-      if (done)
-        var imglist = FullprintPages.map((index, i) => {
-          const hav = card.printPages.indexOf(index) == -1 ? false : true;
-          console.log(index, hav);
-          return (
-            <View className='page_img' key={id_set + index}>
-              <Image
-                src={`https://${baseurl}/img/page/${imgurl}/${index}`}
-                style='width: 100%'
-                mode='widthFix'
-              ></Image>
-              {hav ? (
-                <View
-                  className='blue_border'
-                  onClick={() => {
-                    console.log("sb!!!");
-                  }}
-                ></View>
-              ) : (
-                <View className='cancel_blue_border'></View>
-              )}
-
-              {hav ? (
-                <View
-                  className='checkicon_checked'
-                  hoverClass='checkicon_checked_onhover'
-                  onClick={() => {
-                    this.handleChangetoggle(index, hav);
-                  }}
-                ></View>
-              ) : (
-                <View
-                  className='uncheckicon'
-                  hoverClass='uncheckicon_onhover'
-                  onClick={() => {
-                    this.handleChangetoggle(index, hav);
-                  }}
-                ></View>
-              )}
-            </View>
-          );
-        });
-      else var imglist;
-      console.log("imglist:", typeof imglist);
-      pagesString = "打印页码: " + ArrayToString(card.printPages);
       if (pagesString.length <= 16) choosefontsize = "16px";
       else if (pagesString.length == 17) choosefontsize = "15px";
       else if (pagesString.length == 18) choosefontsize = "14px";
       else if (pagesString.length <= 20) choosefontsize = "12px";
       else choosefontsize = "11px";
     }
-    console.log(pagesString);
+    console.log("pagesstring", pagesString);
     return (
       <AtDrawer
         right
@@ -215,6 +166,16 @@ export default class SetDrawer extends Component {
               value={0}
               choosefontsize={choosefontsize}
               loading={done != true}
+              onClick={
+                done
+                  ? () => {
+                      this.props.dispatch(
+                        action("CList/save", { viewlid: card.lid })
+                      );
+                      Taro.navigateTo({ url: "/pages/ImgPage/ImgPage" });
+                    }
+                  : () => {}
+              }
             ></MRadio>
           </View>
         )}

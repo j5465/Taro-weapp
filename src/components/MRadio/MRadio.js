@@ -65,13 +65,7 @@ export default class MRadio extends AtComponent {
     );
   }
 }
-{
-  /* {choosefontsize === undefined ? (
-                    <Text className='Micon Mcon-check'>1</Text>
-                  ) : (
 
-                  )} */
-}
 MRadio.defaultProps = {
   customStyle: "",
   className: "",

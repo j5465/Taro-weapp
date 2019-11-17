@@ -1,10 +1,10 @@
-import { AtProgress, AtMessage, AtButton, AtTag } from "taro-ui";
+import { AtProgress, AtMessage, AtButton } from "taro-ui";
 import Taro, { Component } from "@tarojs/taro";
 import { View, Image } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import classNames from "classnames";
+import socketio from "weapp.socket.io";
 import {
-  mapStateToProps,
   randomString,
   getExtname,
   DeadLineToTime,
@@ -14,8 +14,6 @@ import {
 } from "../../utils/functions";
 import action from "../../utils/action";
 import "./UploadAndCards.scss";
-import socketio from "weapp.socket.io";
-import Ripple from "../Ripple/Ripple";
 
 var socket = socketio(`wss://${baseurl}/`);
 @connect(state => {
@@ -36,7 +34,8 @@ export default class UploadAndCards extends Component {
     this.state = {
       list: [],
       triggered: false,
-      chooselist: []
+      chooselist: [],
+      glist: []
     };
   }
   // static getDerivedStateFromProps(props, state) {  }
@@ -57,17 +56,23 @@ export default class UploadAndCards extends Component {
   static getDerivedStateFromProps(props, state) {
     var ylist = state.list,
       nlist = props.list,
-      printmessage = [];
+      printmessage = [],
+      glist = state.glist;
     for (let i = 0; i < nlist.length; i++) {
       if (
         nlist[i].printSize != undefined &&
-        nlist[i].printSize + "" + nlist[i].printOri in nlist[i] == false
-      )
+        nlist[i].printSize + "" + nlist[i].printOri in nlist[i] == false &&
+        glist.indexOf(
+          nlist[i].lid + nlist[i].printSize + "" + nlist[i].printOri
+        ) == -1
+      ) {
+        glist.push(nlist[i].lid + nlist[i].printSize + "" + nlist[i].printOri);
         socket.emit("genimg", {
           id: nlist[i].lid,
           set: nlist[i].printSize + "" + nlist[i].printOri,
           extname: getExtname(nlist[i].name)
         });
+      }
 
       if (
         props.sendToprint == true &&
@@ -76,7 +81,10 @@ export default class UploadAndCards extends Component {
         printmessage.push({
           printSize: nlist[i].printSize,
           printOri: nlist[i].printOri,
-          printPages: nlist[i].printPages,
+          printPages:
+            nlist[i][
+              nlist[i].printSize + "" + nlist[i].printOri + "printPages"
+            ],
           printCopies: nlist[i].printCopies,
           isPdf: getExtname(nlist[i].name) == "pdf" ? true : false,
           id: nlist[i].lid,
@@ -86,6 +94,8 @@ export default class UploadAndCards extends Component {
     }
     if (printmessage.length != 0) {
       console.log("sbsbsbsb", props.pplist, props.ppchoosed);
+
+      props.dispatch(action("CList/save", { sendToprint: false }));
       socket.emit("sendToprint", {
         printmessage: printmessage,
         pp: props.pplist[props.ppchoosed]
@@ -96,7 +106,8 @@ export default class UploadAndCards extends Component {
       list: props.list,
       triggered: props.triggered,
       chooselist: props.chooselist,
-      sendToprint: props.sendToprint
+      sendToprint: props.sendToprint,
+      glist: glist
     };
   }
   componentDidMount() {
@@ -109,6 +120,21 @@ export default class UploadAndCards extends Component {
       if (data.progressName == "正在打印" && data.progressPercent == 100) {
         data.progressName = "打印完成";
         data.progressStatus = "success";
+
+        for (let i = 0; i < this.state.list.length; i++) {
+          if (this.state.list[i].lid == data.lid)
+            this.handleMessage(
+              `${this.state.list[i].name}打印完成，可再次打印或者从列表删除`,
+              "success"
+            );
+        }
+
+        var unabledcardlist = this.props.unabledcardlist;
+        unabledcardlist.pop(unabledcardlist.indexOf(data.lid));
+        console.log("update unabledcardlist", unabledcardlist);
+        this.props.dispatch(
+          action("CList/save", { unabledcardlist: unabledcardlist })
+        );
       }
       this.changeCard(data.lid, data);
     });
@@ -123,6 +149,10 @@ export default class UploadAndCards extends Component {
 
   tapUploadView() {
     new Promise((resolve, reject) => {
+      if (this.state.triggered == true)
+        this.props.dispatch(
+          action("CList/save", { triggered: false, chooselist: [] })
+        );
       Taro.chooseMessageFile({
         count: 10,
         type: "file",
@@ -200,7 +230,7 @@ export default class UploadAndCards extends Component {
             });
           } else {
             // error
-            this.handleMessage("错误:" + Thenres.data.msg);
+            this.handleMessage("错误:" + Thenres.data.msg, "error");
             this.changeCard(data.lid, {
               progressName: "上传失败",
               progressStatus: "error"
@@ -242,9 +272,8 @@ export default class UploadAndCards extends Component {
             chooselist: this.state.chooselist.concat(lid)
           })
         );
-    } else {
-      //navigate
-      console.log("fuck navigateto");
+    } else if (this.state.triggered == false) {
+      this.props.dispatch(action("CList/save", { viewlid: lid }));
       Taro.navigateTo({ url: "/pages/ImgPage/ImgPage" });
     }
   }
@@ -257,9 +286,9 @@ export default class UploadAndCards extends Component {
         progressPercent = card.progressPercent,
         Ori = card.printOri,
         Size = card.printSize,
-        Pages = card.printPages,
+        Pages = card[Size + "" + Ori + "printPages"],
         Copies = card.printCopies,
-        totalpages = card[Size + "" + Ori + "_"],
+        // totalpages = card[Size + "" + Ori + "_"],
         progressColor = StatusToColor(progressStatus),
         CardClass = classNames("Card", { Cardonhover: this.state[card.lid] }),
         hav = this.state.chooselist.indexOf(card.lid) == -1 ? false : true;
@@ -286,9 +315,21 @@ export default class UploadAndCards extends Component {
           onLongPress={() => {
             if (
               Size + "" + Ori + "_" in card &&
-              this.props.unabledcardlist.indexOf(card.lid) == -1
+              this.props.unabledcardlist.indexOf(card.lid) == -1 &&
+              Pages.length != 0
             )
               this.handleLongPress(card.lid);
+            console.log(
+              "ctmdkeyia",
+              Size + "" + Ori + "_" in card,
+              this.props.unabledcardlist.indexOf(card.lid)
+            );
+            if (Size + "" + Ori + "_" in card == false)
+              this.handleMessage("请等待读取文件配置", "warning");
+            else if (Pages.length == 0)
+              this.handleMessage("打印页码范围不能为空", "error");
+            else if (this.props.unabledcardlist.indexOf(card.lid) != -1)
+              this.handleMessage("请等待打印结束", "warning");
           }}
           onTouchStart={() => {
             console.log(
@@ -298,10 +339,7 @@ export default class UploadAndCards extends Component {
               Size + "" + Ori + "_" in card
             );
 
-            if (
-              Size + "" + Ori + "_" in card &&
-              this.props.unabledcardlist.indexOf(card.lid) == -1
-            ) {
+            if (this.props.unabledcardlist.indexOf(card.lid) == -1) {
               console.log("ctmctmIn ");
               const ns = {};
               ns[card.lid] = true;
@@ -316,6 +354,12 @@ export default class UploadAndCards extends Component {
           onClick={() => {
             if (Size + "" + Ori + "_" in card)
               this.handleToggleCard(card.lid, hav);
+            else if (this.state.triggered == false) {
+              this.props.dispatch(action("CList/save", { viewlid: card.lid }));
+              Taro.navigateTo({ url: "/pages/ImgPage/ImgPage" });
+            } else if (this.state.triggered) {
+              this.handleMessage("请等待读取配置完成", "warning");
+            }
           }}
         >
           <View className='Card-1'>
@@ -359,10 +403,17 @@ export default class UploadAndCards extends Component {
                           type='primary'
                           onClick={() => {
                             if (
-                              Size + "" + Ori + "_" in card &&
                               this.props.unabledcardlist.indexOf(card.lid) == -1
                             )
                               this.idInSet(card.lid);
+                            else this.handleMessage("请等待打印完成", "waring");
+                            if (this.state.triggered == true)
+                              this.props.dispatch(
+                                action("CList/save", {
+                                  triggered: false,
+                                  chooselist: []
+                                })
+                              );
                           }}
                         >
                           打印设置
@@ -395,21 +446,7 @@ export default class UploadAndCards extends Component {
     });
 
     return (
-      <View style={{}}>
-        {/* <View
-          id='abc'
-          onTouchStart={e => {
-            console.log(e.currentTarget);
-
-            const query = Taro.createSelectorQuery().in(this.$scope);
-            query.select("#abc").boundingClientRect();
-            query.exec(rect => {
-              console.log(rect);
-            });
-          }}
-        >
-          ABC
-        </View> */}
+      <View style={{ position: "relative" }}>
         <AtMessage />
 
         <View
@@ -423,13 +460,6 @@ export default class UploadAndCards extends Component {
         </View>
 
         {CardsList}
-        <View
-          style='width:100px;height:100px;background-color:#8c8c8c;z-index:10'
-          onClick={() => {
-            console.log("open");
-            this.props.dispatch(action("modal_store/save", { isOpen: true }));
-          }}
-        ></View>
       </View>
     );
   }

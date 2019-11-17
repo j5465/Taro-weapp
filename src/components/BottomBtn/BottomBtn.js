@@ -1,7 +1,6 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
-import { mapStateToProps } from "../../utils/functions";
 import action from "../../utils/action";
 import "./BottomBtn.scss";
 

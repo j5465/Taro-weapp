@@ -40,12 +40,13 @@ $color-bg-grey: #f7f7f7 !default;
     word-break: normal;
   }
 }
-
+.at-message {
+  position: absolute !important;
+  font-size: 32px !important;
+}
 /* 引入 Taro UI 默认样式 */
 @import "~taro-ui/dist/style/components/button.scss";
-@import "~taro-ui/dist/style/components/avatar.scss";
 
-@import "~taro-ui/dist/style/components/toast.scss";
 @import "~taro-ui/dist/style/components/icon.scss";
 
 @import "~taro-ui/dist/style/components/progress.scss";
@@ -53,9 +54,8 @@ $color-bg-grey: #f7f7f7 !default;
 @import "~taro-ui/dist/style/components/flex.scss";
 @import "~taro-ui/dist/style/components/message.scss";
 
-@import "~taro-ui/dist/style/components/tag.scss";
-
 @import "~taro-ui/dist/style/components/drawer.scss";
-@import "~taro-ui/dist/style/components/list.scss";
 
 @import "~taro-ui/dist/style/components/input-number.scss";
+
+@import "~taro-ui/dist/style/components/list.scss";

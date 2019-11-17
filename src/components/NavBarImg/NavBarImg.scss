@@ -66,6 +66,10 @@ page {
   position: relative;
   height: 100%;
   width: 100%;
+  white-space: nowrap;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
   .fn {
     position: absolute;
     top: 0;
@@ -75,5 +79,6 @@ page {
     position: absolute;
     bottom: 0;
     font-size: 25px;
+    color: #8c8c8c;
   }
 }

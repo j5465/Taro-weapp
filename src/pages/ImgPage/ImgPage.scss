@@ -78,3 +78,27 @@
   border: solid 0px #d6e4ef;
   transition: border 200ms;
 }
+
+.loading {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  font-style: normal;
+  font-size: 50px;
+
+  text-align: center;
+  color: #1890ff;
+  .rotate {
+    font-family: "iconfont" !important;
+    font-size: 250px;
+    animation: rotate1 1s infinite linear;
+  }
+}
+@keyframes rotate1 {
+  100% {
+    transform: rotate(360deg);
+  }
+}
