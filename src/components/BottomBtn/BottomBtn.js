@@ -23,6 +23,7 @@ export default class BottomBtn extends Component {
     };
   }
   static getDerivedStateFromProps(props, state) {
+    console.log("bottom btn get new props");
     return {
       triggered: props.triggered,
       num: props.chooselist.length,
@@ -38,11 +39,15 @@ export default class BottomBtn extends Component {
         action("CList/save", {
           sendToprint: true,
           chooselist: [],
-          unabledcardlist: this.state.chooselist
+          // unabledcardlist: this.state.chooselist,
+          triggered: false
         })
       );
       console.log("start print");
-    } else this.props.dispatch(action("CList/save", { chooseing: true }));
+    } else {
+      Taro.atMessage({ message: "请选择打印点", type: "info" });
+      // this.props.dispatch(action("CList/save", { chooseing: true }));
+    }
   }
   render() {
     console.log("triggered", this.state.num);
@@ -50,7 +55,7 @@ export default class BottomBtn extends Component {
 
     return (
       <View>
-        <View
+        {/* <View
           className={this.state.triggered ? "triggered" : "trigger"}
           // onClick={this.test()}
 
@@ -61,7 +66,7 @@ export default class BottomBtn extends Component {
         >
           &#xe7ba;
           <View className='whitebg'></View>
-        </View>
+        </View> */}
         <View
           className={
             "at-row  at-row__align--end at-row__justify--around at-row--nowrap " +

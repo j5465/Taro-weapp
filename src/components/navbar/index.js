@@ -1,9 +1,10 @@
 import _isFunction from "lodash/isFunction";
 import Taro, { Component } from "@tarojs/taro";
+import { AtMessage } from "taro-ui";
 import { View } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
-import { getSystemInfo } from "../../utils/functions";
 import classNames from "classnames";
+import { getSystemInfo } from "../../utils/functions";
 import action from "../../utils/action";
 import "./index.scss";
 
@@ -167,6 +168,12 @@ class AtComponent extends Component {
             <View className='modal' onClick={this.handleChooseClick}></View>
           )}
         </View>
+        <AtMessage
+          customStyle={{
+            top: `${navBarHeight + navBarExtendHeight}px`,
+            "z-index": 2000
+          }}
+        />
       </View>
     );
   }

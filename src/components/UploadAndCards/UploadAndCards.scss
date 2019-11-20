@@ -1,8 +1,4 @@
 @import "~taro-ui/dist/style/components/flex.scss";
-@import "~taro-ui/dist/style/components/curtain.scss";
-@import "~taro-ui/dist/style/components/tag.scss";
-
-// @import "~taro-ui/dist/style/components/message.scss";
 .upload-top {
   width: 98%;
   margin-bottom: 10px;
@@ -104,7 +100,7 @@
     }
   }
 }
-.Cardhva {
+.Cardhav {
   background-color: #e8e8e8;
   border: solid 6px #262626;
 }
@@ -114,12 +110,13 @@
 }
 @keyframes turnblack {
   from {
-    background-color: #ffffff;
+    background-color: #f5f5f5;
   }
   to {
     background-color: #e8e8e8;
   }
 }
+
 .Card-2 {
   // height: 60px;
 
@@ -159,16 +156,5 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-}
-@keyframes tyx {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(0.9);
-  }
-  100% {
-    transform: scale(1);
   }
 }

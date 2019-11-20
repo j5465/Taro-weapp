@@ -43,16 +43,16 @@
   color: #096dd9;
   font-size: 60px;
   transition: opacity 0.2s, transform 0.3s;
-  transition-delay: 0.1s;
+  background-color: white;
 }
 
 .toolbar {
   @include toolbar_;
   opacity: 1;
-  background-color: white;
 }
 .hidetoolbar {
   @include toolbar_;
+  transition-delay: 0.1s;
   opacity: 0;
   transform: translate(0, 100%);
 }

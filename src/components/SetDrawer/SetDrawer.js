@@ -1,12 +1,11 @@
 import { AtDrawer, AtInputNumber } from "taro-ui";
 import Taro, { Component } from "@tarojs/taro";
-import { View, Image } from "@tarojs/components";
+import { View } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 import {
   ArrayToString,
   getSystemInfo,
-  getExtname,
-  baseurl
+  getExtname
 } from "../../utils/functions";
 import action from "../../utils/action";
 import MRadio from "../MRadio/MRadio";

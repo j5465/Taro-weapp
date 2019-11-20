@@ -24,6 +24,7 @@ export default class Index extends Component {
         <SetDrawer></SetDrawer>
         <UploadAndCards></UploadAndCards>
         <BottomBtn></BottomBtn>
+        <View style={{ height: "70px" }}></View>
       </View>
     );
   }

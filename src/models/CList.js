@@ -1,4 +1,4 @@
-// import Taro from "@tarojs/taro";
+import Taro from "@tarojs/taro";
 
 export default {
   namespace: "CList",
@@ -48,8 +48,24 @@ export default {
       var newlist = [];
       //if not choosed all
       if (state.list.length != state.chooselist.length) {
-        for (let i = 0; i < state.list.length; i++)
-          newlist.push(state.list[i].lid);
+        let noticed = false;
+
+        for (let i = 0; i < state.list.length; i++) {
+          if (
+            state.list[i].unabled != true &&
+            state.list[i].progressStatus == "success"
+          )
+            newlist.push(state.list[i].lid);
+          else {
+            if (noticed == false)
+              Taro.atMessage({
+                message: "当前有文件不可被选中",
+                type: "warning"
+              });
+            noticed = true;
+          }
+          // if (state.unabledcardlist.indexOf(state.list[i].lid) == -1)
+        }
       }
       return { ...state, ...{ chooselist: newlist } };
     },
@@ -59,7 +75,10 @@ export default {
       for (let i = 0; i < state.chooselist.length; i++)
         for (let j = 0; j < state.list.length; j++)
           if (state.chooselist[i] == state.list[j].lid) newlist.splice(j, 1);
-      return { ...state, ...{ list: newlist, chooselist: [] } };
+      return {
+        ...state,
+        ...{ list: newlist, chooselist: [], triggered: false }
+      };
     },
     //add true/false  ppname
     updatepp(state, { payload }) {
@@ -75,6 +94,12 @@ export default {
         }
       }
       return { ...state, ...{ pplist: newpplist, ppchoosed: ppchoosed } };
+    },
+    update_unabledcardlist(state, { payload }) {
+      var newun = state.unabledcardlist;
+      const popi = newun.indexOf(payload.lid);
+      if (popi != -1) newun.pop(popi);
+      return { ...state, ...{ unabledcardlist: newun } };
     }
   }
 };

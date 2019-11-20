@@ -2,7 +2,6 @@ import _isFunction from "lodash/isFunction";
 import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
 import { getSystemInfo } from "../../utils/functions";
-import classNames from "classnames";
 import "./NavBarImg.scss";
 
 let globalSystemInfo = getSystemInfo();

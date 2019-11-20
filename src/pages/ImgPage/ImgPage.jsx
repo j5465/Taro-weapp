@@ -11,8 +11,7 @@ import NavBarImg from "../../components/NavBarImg/NavBarImg";
   for (let i = 0; i < state["CList"].list.length; i++) {
     if (state["CList"].list[i].lid == state["CList"].viewlid)
       return {
-        card: state["CList"].list[i],
-        unabledcardlist: state["CList"].unabledcardlist
+        card: state["CList"].list[i]
       };
   }
 })
@@ -91,6 +90,8 @@ export default class ImgPage extends Component {
               onClick={() => {
                 this.handleChangetoggle(index, hav);
               }}
+              hoverStartTime={10}
+              hoverStayTime={50}
             ></View>
           </View>
         </SwiperItem>

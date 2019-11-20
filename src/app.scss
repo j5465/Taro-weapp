@@ -2,12 +2,14 @@
 $color-brand: #1890ff;
 $color-brand-light: #1890ff;
 $color-brand-dark: #0050b3;
+$color-info: #1890ff;
 /* 背景色 */
 $color-bg: #fff !default;
 $color-bg-base: #fafbfc !default;
 $color-bg-light: #ecf5fd !default;
 $color-bg-lighter: tint($color-bg-light, 50%) !default;
 $color-bg-grey: #f7f7f7 !default;
+
 // #1890ff #52c41a #f5222d
 // .at-avatar .at-avatar--small .at-avatar--circle .my-avatar {
 .at-avatar--small {
@@ -40,10 +42,7 @@ $color-bg-grey: #f7f7f7 !default;
     word-break: normal;
   }
 }
-.at-message {
-  position: absolute !important;
-  font-size: 32px !important;
-}
+
 /* 引入 Taro UI 默认样式 */
 @import "~taro-ui/dist/style/components/button.scss";
 
@@ -58,4 +57,4 @@ $color-bg-grey: #f7f7f7 !default;
 
 @import "~taro-ui/dist/style/components/input-number.scss";
 
-@import "~taro-ui/dist/style/components/list.scss";
+// @import "~taro-ui/dist/style/components/list.scss";

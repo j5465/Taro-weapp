@@ -66,16 +66,21 @@ page {
   position: relative;
   height: 100%;
   width: 100%;
-  white-space: nowrap;
-  text-align: left;
-  overflow: hidden;
-  text-overflow: ellipsis;
   .fn {
+    white-space: nowrap;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
     position: absolute;
     top: 0;
     font-size: 45px;
+    width: 100%;
   }
   .choosed_pages {
+    white-space: nowrap;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
     position: absolute;
     bottom: 0;
     font-size: 25px;
