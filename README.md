@@ -1,6 +1,4 @@
 # Taro-weapp
 Taro weapp
-[超链接描述](https://www.bilibili.com/video/BV1GN41197yN)
-
-< iframe src="//player.bilibili.com/player.html?aid=501857592&bvid=BV1GN41197yN&cid=300864665&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">演示视频 </iframe>
+[视频演示](https://www.bilibili.com/video/BV1GN41197yN)
 
